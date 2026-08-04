@@ -13,3 +13,12 @@ __pycache__/
 # private log rather than in the artifact a reader came to read. The conclusions
 # that matter are promoted into NOTES.md.
 SESSION.md
+
+# Smoke-test scratch from 10_neural_kaggle.ipynb. The notebook prefixes its outputs
+# when SMOKE is on so they can never be mistaken for real artifacts; this keeps them
+# out of the repo as well.
+SMOKE_*
+notebooks/_smoke*.ipynb
+neural_oof.npy
+neural_test.npy
+submission.csv
