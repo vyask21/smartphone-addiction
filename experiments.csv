@@ -6,4 +6,4 @@ id,utc,name,cv_mean,cv_std,folds,lb_public,lb_private,submitted,notes
 5,2026-08-04 05:29,lgbm_trees2000,0.961832,0.000952,5,,,no,"n_estimators=2000, lr default 0.1, no early stopping, all else anchor"
 6,2026-08-04 06:34,lgbm_lr01,0.962198,0.000816,5,,,no,"lr=0.1, n_estimators=1000 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
 7,2026-08-04 06:34,lgbm_lr005,0.963210,0.000591,5,,,no,"lr=0.05, n_estimators=2000 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
-8,2026-08-04 06:34,lgbm_lr003,0.963275,0.000549,5,,,no,"lr=0.03, n_estimators=3333 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
+8,2026-08-04 06:34,lgbm_lr003,0.963275,0.000549,5,0.964780,,yes,"lr=0.03, n_estimators=3333 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
