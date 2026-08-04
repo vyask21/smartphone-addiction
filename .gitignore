@@ -7,3 +7,9 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .venv/
+
+# Local working log. Deliberately not committed: it records the session as it
+# happened, including dead ends and machine-specific detail, which belongs in a
+# private log rather than in the artifact a reader came to read. The conclusions
+# that matter are promoted into NOTES.md.
+SESSION.md
