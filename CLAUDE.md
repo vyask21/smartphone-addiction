@@ -52,6 +52,6 @@ a public GitHub repo mid-competition is neither.
 
 Binary classification. Target is `addicted_label`, 0 or 1 in `train.csv`, submitted
 as a probability. Synthetic data generated from an original public dataset, which is
-the usual Playground Series pattern. 13 features, mixed numeric and categorical,
+the usual Playground Series pattern. 12 features, mixed numeric and categorical,
 with missingness on every feature between 4% and 20%. See `DATA.md` for the
 column-level profile taken from the files themselves.
