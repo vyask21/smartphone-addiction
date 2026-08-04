@@ -51,6 +51,10 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | id | name | CV AUC | fold sd | public LB |
 |---|---|---|---|---|
 | 1 | lgbm_default_anchor | 0.954947 | 0.000645 | 0.955940 |
+| 2 | lgbm_trees100 | 0.954947 | 0.000645 | reproducibility re-run of 1 |
+| 3 | lgbm_trees300 | 0.960605 | 0.000688 | |
+| 4 | lgbm_trees1000 | 0.962141 | 0.000859 | |
+| 5 | lgbm_trees2000 | 0.961832 | 0.000952 | |
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
