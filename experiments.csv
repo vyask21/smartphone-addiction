@@ -11,3 +11,6 @@ id,utc,name,cv_mean,cv_std,folds,lb_public,lb_private,submitted,notes
 10,2026-08-04 19:01,lgbm_bag08_seed2024,0.963234,0.000899,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 2024. One variable against exp7, which is this config with bagging off."
 11,2026-08-04 19:07,lgbm_bag08_seed7,0.963445,0.000478,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 7. One variable against exp7, which is this config with bagging off."
 12,2026-08-04 19:07,lgbm_bag08_seedblend3,0.963821,0.000560,5,0.965090,,yes,"rank average of bagged seeds [42, 2024, 7]. One variable against the single-seed rows. Capacity-varied floor from 07 is +0.000072."
+13,2026-08-04 19:26,lgbm_bag08_seed2025,0.963337,0.000731,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 2025. One variable against exp7, which is this config with bagging off."
+14,2026-08-04 19:33,lgbm_bag08_seed13,0.963483,0.000552,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 13. One variable against exp7, which is this config with bagging off."
+15,2026-08-04 19:33,lgbm_bag08_seedblend5,0.963880,0.000555,5,0.965080,,yes,"rank average of bagged seeds [42, 2024, 7, 2025, 13]. One variable against the single-seed rows. Capacity-varied floor from 07 is +0.000072."
