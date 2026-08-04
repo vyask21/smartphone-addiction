@@ -7,3 +7,7 @@ id,utc,name,cv_mean,cv_std,folds,lb_public,lb_private,submitted,notes
 6,2026-08-04 06:34,lgbm_lr01,0.962198,0.000816,5,,,no,"lr=0.1, n_estimators=1000 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
 7,2026-08-04 06:34,lgbm_lr005,0.963210,0.000591,5,,,no,"lr=0.05, n_estimators=2000 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
 8,2026-08-04 06:34,lgbm_lr003,0.963275,0.000549,5,0.964780,,yes,"lr=0.03, n_estimators=3333 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
+9,2026-08-04 18:54,lgbm_bag08_seed42,0.963471,0.000591,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 42. One variable against exp7, which is this config with bagging off."
+10,2026-08-04 19:01,lgbm_bag08_seed2024,0.963234,0.000899,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 2024. One variable against exp7, which is this config with bagging off."
+11,2026-08-04 19:07,lgbm_bag08_seed7,0.963445,0.000478,5,,,no,"bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 7. One variable against exp7, which is this config with bagging off."
+12,2026-08-04 19:07,lgbm_bag08_seedblend3,0.963821,0.000560,5,0.965090,,yes,"rank average of bagged seeds [42, 2024, 7]. One variable against the single-seed rows. Capacity-varied floor from 07 is +0.000072."
