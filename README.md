@@ -55,6 +55,13 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 3 | lgbm_trees300 | 0.960605 | 0.000688 | |
 | 4 | lgbm_trees1000 | 0.962141 | 0.000859 | 0.964350 |
 | 5 | lgbm_trees2000 | 0.961832 | 0.000952 | |
+| 6 | lgbm_lr01 | 0.962198 | 0.000816 | |
+| 7 | lgbm_lr005 | 0.963210 | 0.000591 | |
+| 8 | lgbm_lr003 | 0.963275 | 0.000549 | |
+
+Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
+re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
+read a difference at the fourth decimal between them. See `NOTES.md`.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
