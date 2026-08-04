@@ -50,7 +50,7 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 
 | id | name | CV AUC | fold sd | public LB |
 |---|---|---|---|---|
-| 1 | lgbm_default_anchor | 0.954947 | 0.000645 | |
+| 1 | lgbm_default_anchor | 0.954947 | 0.000645 | 0.955940 |
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
