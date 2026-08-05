@@ -22,3 +22,10 @@ notebooks/_smoke*.ipynb
 neural_oof.npy
 neural_test.npy
 submission.csv
+
+# Staged copy of the notebook that `kaggle kernels push` uploads. set_smoke.py
+# recreates it from notebooks/ on every run, so committing it would just be a second
+# copy of the same file drifting out of date.
+kaggle/*/10_neural_kaggle.ipynb
+kaggle/*/out/
+kaggle/*/out_*/
