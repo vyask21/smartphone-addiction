@@ -53,11 +53,16 @@ def finish(ax, title, sub=None):
 
 
 # ------------------------------------------------------------------ fig 1: ledger
-led = D["ledger"]
+# Rows 1 to 15 are the LightGBM line. Row 16 is the neural model at 0.9392, a
+# different family that was never submitted; including it would flatten everything
+# else into a straight line. Named in the title rather than dropped in silence.
+led = [r for r in D["ledger"] if r["id"] <= 15]
 x = [r["id"] for r in led]
 cv = [r["cv_mean"] for r in led]
-lb_x = [r["id"] for r in led if r["lb_public"]]
-lb_y = [r["lb_public"] for r in led if r["lb_public"]]
+# `is not None`, not truthiness. An unsubmitted row is null here and NaN is truthy,
+# so a bare test would let a NaN through and rely on matplotlib silently dropping it.
+lb_x = [r["id"] for r in led if r["lb_public"] is not None]
+lb_y = [r["lb_public"] for r in led if r["lb_public"] is not None]
 
 fig, ax = plt.subplots(figsize=(9, 4.6))
 ax.plot(x, cv, color=BLUE, lw=2, marker="o", ms=5.5, label="cross-validation",
@@ -75,7 +80,7 @@ ax.set_xlabel("experiment")
 ax.set_ylabel("ROC AUC")
 ax.set_xticks(x)
 ax.legend(frameon=False, loc="lower right", labelcolor=SECOND)
-finish(ax, "Every experiment in the ledger",
+finish(ax, "Every LightGBM experiment in the ledger",
        "The whole competition is +0.0089 AUC, and all of it is model capacity. "
        "No feature ever helped.")
 fig.tight_layout()
@@ -83,7 +88,7 @@ fig.savefig(OUTDIR / "fig1_ledger.png", bbox_inches="tight")
 plt.close(fig)
 
 # ------------------------------------------------------------- fig 2: missingness
-mi = D["missingness_clean"]
+mi = D["missingness"]
 names = [m["feature"] for m in mi]
 lift = np.array([m["lift"] for m in mi])
 # The band is +/- 2 standard errors, reconstructed from each feature's own z.
@@ -103,8 +108,13 @@ ax.set_yticklabels(names, fontsize=9.5, color=SECOND)
 ax.set_xlabel("target rate when the feature is missing, minus when it is present")
 ax.legend(frameon=False, loc="lower right", labelcolor=SECOND)
 ax.grid(axis="y", visible=False)
+# Computed, not typed. This subtitle used to carry a hardcoded 2.24 while the plotted
+# data came out at 1.98, so the label and the points disagreed and the figure looked
+# fine either way. A number in a caption gets read as measured; make it be measured.
+crossing = sum(1 for m in mi if abs(m["z"]) < 2)
 finish(ax, "Missingness carries no signal about the target",
-       "Eleven of twelve intervals cross zero. The largest |z| is 2.24, against the 2.4\n"
+       f"{crossing} of {len(mi)} intervals cross zero. The largest |z| is "
+       f"{max(abs(m['z']) for m in mi):.2f}, against the 2.4\n"
        "you would expect from pure noise across twelve tests. This killed my\n"
        "top-priority idea in ninety seconds.")
 fig.tight_layout()
