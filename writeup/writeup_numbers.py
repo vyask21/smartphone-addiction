@@ -39,11 +39,16 @@ for c in FEATURES:
     m = train[c].isna().to_numpy()
     n = int(m.sum())
     rate = float(y[m].mean())
-    # Standard error of the difference between the missing-subgroup rate and the
-    # overall rate, treating each as a binomial proportion.
+    present = float(y[~m].mean())
+    # Two-proportion z test: missing rows against PRESENT rows, with the pooled
+    # standard error. Both halves have to describe the same contrast. Comparing the
+    # missing subgroup against the overall base instead is wrong twice over: the
+    # base contains the subgroup, so the difference is diluted by the missing
+    # fraction, and the pooled SE below is derived for two disjoint groups.
     se = float(np.sqrt(base * (1 - base) * (1 / n + 1 / (len(y) - n))))
     miss.append({"feature": c, "n_missing": n, "miss_frac": n / len(y),
-                 "rate": rate, "lift": rate - base, "z": (rate - base) / se})
+                 "rate": rate, "rate_present": present,
+                 "lift": rate - present, "z": (rate - present) / se})
 res["missing_base_rate"] = base
 res["missingness"] = sorted(miss, key=lambda d: d["lift"])
 
@@ -110,11 +115,53 @@ for i, k in enumerate(seed_order, start=1):
     cum.append({"n_seeds": i, "cv": float(s.mean()), "sd": float(s.std())})
 res["seed_saturation"] = cum
 
-# -------------------------------------------------------------- 4. ledger for CV/LB
-led = pd.read_csv(REPO / "experiments.csv")
-res["ledger"] = led.where(pd.notna(led), None).to_dict("records")
+# ------------------------------------------------------- 4. the out-of-family test
+# Everything in section 2 is LightGBM against LightGBM, so it cannot falsify the
+# correlation claim: no pair there is genuinely decorrelated. The neural model is the
+# one member of a different family, and it is the only vector in the repo whose
+# Spearman falls below the within-family band. Recomputed here from the saved vector
+# rather than quoted from the Kaggle log, same as everything else in this file.
+neural = np.load(OOF / "neural_oof.npy")
+neural_rank = pd.Series(neural).rank(pct=True).to_numpy()
 
-OUT.write_text(json.dumps(res, indent=1), encoding="utf-8")
+blend5 = np.zeros(len(y))
+for k in seed_order:
+    blend5 = blend5 + rank[k]
+blend5 = blend5 / len(seed_order)
+base_folds = per_fold(blend5)
+
+idx = np.arange(0, len(y), 20)
+band = [p["spearman"] for p in pairs]
+curve = []
+for w in (0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50):
+    b = per_fold((1 - w) * blend5 + w * neural_rank)
+    d = b - base_folds
+    curve.append({"w": w, "blend": float(b.mean()), "gain": float(d.mean()),
+                  "paired_sd": float(d.std(ddof=1)), "folds_won": int((d > 0).sum())})
+
+res["neural"] = {
+    "cv": float(per_fold(neural).mean()),
+    "sd": float(per_fold(neural).std()),
+    "lgbm_blend_cv": float(base_folds.mean()),
+    "spearman_vs_blend": float(spearmanr(neural[idx], blend5[idx]).statistic),
+    "within_family_spearman_min": float(min(band)),
+    "within_family_spearman_max": float(max(band)),
+    "catboost_spearman": 0.9877,   # fold-0 probe, not a saved five-fold vector
+    "weight_curve": curve,
+}
+
+# -------------------------------------------------------------- 5. ledger for CV/LB
+led = pd.read_csv(REPO / "experiments.csv")
+# NOT `led.where(pd.notna(led), None)`. Assigning None into a float column coerces
+# straight back to NaN, so that idiom silently emits bare NaN, which json.dumps
+# writes and json.loads accepts as an extension while a strict parser rejects it.
+# An unsubmitted row has to reach the notebook as a real null, because the chart
+# filters on `is not None` and NaN is truthy.
+res["ledger"] = [{k: (None if isinstance(v, float) and np.isnan(v) else v)
+                  for k, v in r.items()} for r in led.to_dict("records")]
+
+# allow_nan=False so this can never regress quietly again.
+OUT.write_text(json.dumps(res, indent=1, allow_nan=False), encoding="utf-8")
 print(f"wrote {OUT}")
 print(f"  {len(pairs)} model pairs")
 print(f"  missingness: largest |z| = {max(abs(m['z']) for m in miss):.2f}")
@@ -126,3 +173,8 @@ corr = np.corrcoef([p["spearman"] for p in pairs], [p["gain"] for p in pairs])[0
 print(f"  correlation between spearman and blend gain: {corr:+.3f}")
 corr2 = np.corrcoef([p["cv_gap"] for p in pairs], [p["gain"] for p in pairs])[0, 1]
 print(f"  correlation between cv gap and blend gain:   {corr2:+.3f}")
+n = res["neural"]
+print(f"  neural CV {n['cv']:.6f}, spearman vs blend {n['spearman_vs_blend']:.4f} "
+      f"(within-family band {n['within_family_spearman_min']:.4f}"
+      f" to {n['within_family_spearman_max']:.4f})")
+print(f"  best neural weight: {max(n['weight_curve'], key=lambda c: c['gain'])}")

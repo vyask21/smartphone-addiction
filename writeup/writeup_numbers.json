@@ -6,96 +6,108 @@
    "n_missing": 29034,
    "miss_frac": 0.04199494047317713,
    "rate": 0.7087897062301636,
-   "lift": -0.000634610652923584,
-   "z": -0.23311060240353343
+   "rate_present": 0.7094521522521973,
+   "lift": -0.0006624460220336914,
+   "z": -0.24333532780246742
   },
   {
    "feature": "stress_level",
    "n_missing": 55148,
    "miss_frac": 0.07976637656591487,
    "rate": 0.7090012431144714,
-   "lift": -0.00042307376861572266,
-   "z": -0.20991687969796002
+   "rate_present": 0.7094610333442688,
+   "lift": -0.0004597902297973633,
+   "z": -0.22813451817273367
   },
   {
    "feature": "social_media_hours",
    "n_missing": 133995,
    "miss_frac": 0.19381111967704656,
    "rate": 0.709414541721344,
-   "lift": -9.775161743164062e-06,
-   "z": -0.007076263255163495
+   "rate_present": 0.7094267010688782,
+   "lift": -1.2159347534179688e-05,
+   "z": -0.008802181122276542
   },
   {
    "feature": "academic_work_impact",
    "n_missing": 44224,
    "miss_frac": 0.06396584168512039,
    "rate": 0.7094563841819763,
-   "lift": 3.2067298889160156e-05,
-   "z": 0.014369927272062854
+   "rate_present": 0.7094221711158752,
+   "lift": 3.421306610107422e-05,
+   "z": 0.015331483743799402
   },
   {
    "feature": "notifications_per_day",
    "n_missing": 67584,
    "miss_frac": 0.0977538767286355,
    "rate": 0.7102420926094055,
-   "lift": 0.0008177757263183594,
-   "z": 0.4447705311679653
-  },
-  {
-   "feature": "gaming_hours",
-   "n_missing": 126821,
-   "miss_frac": 0.18343460583277527,
-   "rate": 0.7105053663253784,
-   "lift": 0.0010810494422912598,
-   "z": 0.766220840131342
+   "rate_present": 0.7093357443809509,
+   "lift": 0.0009063482284545898,
+   "z": 0.4929431994854286
   },
   {
    "feature": "work_study_hours",
    "n_missing": 51518,
    "miss_frac": 0.07451592420256042,
    "rate": 0.7106448411941528,
-   "lift": 0.0012205243110656738,
-   "z": 0.5869859929321751
+   "rate_present": 0.7093260884284973,
+   "lift": 0.0013187527656555176,
+   "z": 0.634226942111851
+  },
+  {
+   "feature": "gaming_hours",
+   "n_missing": 126821,
+   "miss_frac": 0.18343460583277527,
+   "rate": 0.7105053663253784,
+   "rate_present": 0.7091814875602722,
+   "lift": 0.0013238787651062012,
+   "z": 0.9383321982774018
   },
   {
    "feature": "weekend_screen_time",
    "n_missing": 112063,
    "miss_frac": 0.16208855184423948,
    "rate": 0.7106538414955139,
-   "lift": 0.0012295246124267578,
-   "z": 0.8298216132086296
+   "rate_present": 0.7091864943504333,
+   "lift": 0.0014673471450805664,
+   "z": 0.9903310293760929
   },
   {
    "feature": "daily_screen_time_hours",
    "n_missing": 95854,
    "miss_frac": 0.13864376331597164,
    "rate": 0.7113004922866821,
-   "lift": 0.0018761754035949707,
-   "z": 1.187373332372325
+   "rate_present": 0.709122359752655,
+   "lift": 0.0021781325340270996,
+   "z": 1.3784726525679663
   },
   {
    "feature": "app_opens_per_day",
    "n_missing": 80710,
    "miss_frac": 0.1167393967620764,
    "rate": 0.7127864956855774,
-   "lift": 0.0033621788024902344,
-   "z": 1.9771801430732583
-  },
-  {
-   "feature": "sleep_hours",
-   "n_missing": 44480,
-   "miss_frac": 0.06433612152121371,
-   "rate": 0.7133768200874329,
-   "lift": 0.003952503204345703,
-   "z": 1.7759546956481946
+   "rate_present": 0.7089799642562866,
+   "lift": 0.0038065314292907715,
+   "z": 2.2384884320856524
   },
   {
    "feature": "age",
    "n_missing": 28929,
    "miss_frac": 0.04184306788415448,
    "rate": 0.7134017944335938,
-   "lift": 0.003977477550506592,
-   "z": 1.4585123194345488
+   "rate_present": 0.7092506289482117,
+   "lift": 0.00415116548538208,
+   "z": 1.5222024319584473
+  },
+  {
+   "feature": "sleep_hours",
+   "n_missing": 44480,
+   "miss_frac": 0.06433612152121371,
+   "rate": 0.7133768200874329,
+   "rate_present": 0.7091525793075562,
+   "lift": 0.004224240779876709,
+   "z": 1.8980529200639886
   }
  ],
  "single_cv": {
@@ -969,6 +981,73 @@
    "sd": 0.0005547070146738952
   }
  ],
+ "neural": {
+  "cv": 0.9391689164198243,
+  "sd": 0.000759146589520503,
+  "lgbm_blend_cv": 0.9638804130611953,
+  "spearman_vs_blend": 0.9650419155042297,
+  "within_family_spearman_min": 0.9745648778947578,
+  "within_family_spearman_max": 0.998091892385352,
+  "catboost_spearman": 0.9877,
+  "weight_curve": [
+   {
+    "w": 0.05,
+    "blend": 0.9636925088678598,
+    "gain": -0.00018790419333551965,
+    "paired_sd": 1.584787372166672e-05,
+    "folds_won": 0
+   },
+   {
+    "w": 0.1,
+    "blend": 0.9634012345881462,
+    "gain": -0.00047917847304914665,
+    "paired_sd": 3.266236322796298e-05,
+    "folds_won": 0
+   },
+   {
+    "w": 0.15,
+    "blend": 0.9630017114431585,
+    "gain": -0.0008787016180368257,
+    "paired_sd": 5.0449512012949546e-05,
+    "folds_won": 0
+   },
+   {
+    "w": 0.2,
+    "blend": 0.9624893155070259,
+    "gain": -0.0013910975541695514,
+    "paired_sd": 6.803900177538933e-05,
+    "folds_won": 0
+   },
+   {
+    "w": 0.25,
+    "blend": 0.9618601560109207,
+    "gain": -0.002020257050274665,
+    "paired_sd": 8.61945047688188e-05,
+    "folds_won": 0
+   },
+   {
+    "w": 0.3,
+    "blend": 0.9611110810618296,
+    "gain": -0.0027693319993658204,
+    "paired_sd": 0.0001051837996202618,
+    "folds_won": 0
+   },
+   {
+    "w": 0.4,
+    "blend": 0.959244330946718,
+    "gain": -0.004636082114477369,
+    "paired_sd": 0.00014656530985861184,
+    "folds_won": 0
+   },
+   {
+    "w": 0.5,
+    "blend": 0.9568859117407996,
+    "gain": -0.006994501320395918,
+    "paired_sd": 0.0001917106564771205,
+    "folds_won": 0
+   }
+  ]
+ },
  "ledger": [
   {
    "id": 1,
@@ -978,7 +1057,7 @@
    "cv_std": 0.000645,
    "folds": 5,
    "lb_public": 0.95594,
-   "lb_private": NaN,
+   "lb_private": null,
    "submitted": "yes",
    "notes": "untuned lgbm defaults, raw features, native cat and nan handling"
   },
@@ -989,8 +1068,8 @@
    "cv_mean": 0.954947,
    "cv_std": 0.000645,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "reproducibility re-run of exp 1, same config, not a new idea"
   },
@@ -1001,8 +1080,8 @@
    "cv_mean": 0.960605,
    "cv_std": 0.000688,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "n_estimators=300, lr default 0.1, no early stopping, all else anchor"
   },
@@ -1014,7 +1093,7 @@
    "cv_std": 0.000859,
    "folds": 5,
    "lb_public": 0.96435,
-   "lb_private": NaN,
+   "lb_private": null,
    "submitted": "yes",
    "notes": "n_estimators=1000, lr default 0.1, no early stopping, all else anchor"
   },
@@ -1025,8 +1104,8 @@
    "cv_mean": 0.961832,
    "cv_std": 0.000952,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "n_estimators=2000, lr default 0.1, no early stopping, all else anchor"
   },
@@ -1037,8 +1116,8 @@
    "cv_mean": 0.962198,
    "cv_std": 0.000816,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "lr=0.1, n_estimators=1000 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
   },
@@ -1049,8 +1128,8 @@
    "cv_mean": 0.96321,
    "cv_std": 0.000591,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "lr=0.05, n_estimators=2000 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
   },
@@ -1062,7 +1141,7 @@
    "cv_std": 0.000549,
    "folds": 5,
    "lb_public": 0.96478,
-   "lb_private": NaN,
+   "lb_private": null,
    "submitted": "yes",
    "notes": "lr=0.03, n_estimators=3333 holding lr*n=100, DETERMINISTIC flags on, not comparable at 4dp to rows 1-5"
   },
@@ -1073,8 +1152,8 @@
    "cv_mean": 0.963471,
    "cv_std": 0.000591,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 42. One variable against exp7, which is this config with bagging off."
   },
@@ -1085,8 +1164,8 @@
    "cv_mean": 0.963234,
    "cv_std": 0.000899,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 2024. One variable against exp7, which is this config with bagging off."
   },
@@ -1097,8 +1176,8 @@
    "cv_mean": 0.963445,
    "cv_std": 0.000478,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 7. One variable against exp7, which is this config with bagging off."
   },
@@ -1110,7 +1189,7 @@
    "cv_std": 0.00056,
    "folds": 5,
    "lb_public": 0.96509,
-   "lb_private": NaN,
+   "lb_private": null,
    "submitted": "yes",
    "notes": "rank average of bagged seeds [42, 2024, 7]. One variable against the single-seed rows. Capacity-varied floor from 07 is +0.000072."
   },
@@ -1121,8 +1200,8 @@
    "cv_mean": 0.963337,
    "cv_std": 0.000731,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 2025. One variable against exp7, which is this config with bagging off."
   },
@@ -1133,8 +1212,8 @@
    "cv_mean": 0.963483,
    "cv_std": 0.000552,
    "folds": 5,
-   "lb_public": NaN,
-   "lb_private": NaN,
+   "lb_public": null,
+   "lb_private": null,
    "submitted": "no",
    "notes": "bagged subsample=0.8 freq=1 colsample=0.8, lr=0.05 n=2000, seed 13. One variable against exp7, which is this config with bagging off."
   },
@@ -1146,121 +1225,21 @@
    "cv_std": 0.000555,
    "folds": 5,
    "lb_public": 0.96508,
-   "lb_private": NaN,
+   "lb_private": null,
    "submitted": "yes",
    "notes": "rank average of bagged seeds [42, 2024, 7, 2025, 13]. One variable against the single-seed rows. Capacity-varied floor from 07 is +0.000072."
+  },
+  {
+   "id": 16,
+   "utc": "2026-08-05 21:07",
+   "name": "neural_mlp_kaggle",
+   "cv_mean": 0.939169,
+   "cv_std": 0.000759,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "embedding MLP 512/256/128, quantile transform + missing mask, AdamW OneCycle, early stop on fold AUC. Kaggle T4, 14.9 min, fold alignment verified. Not submitted: 0.0247 behind the lgbm blend and the blend gate said stop at every weight from 0.05 to 0.50, 0/5 folds. Closes the last diversity hypothesis."
   }
- ],
- "missingness_clean": [
-  {
-   "feature": "gender",
-   "miss_frac": 0.04199494047317713,
-   "rate_missing": 0.7087897062301636,
-   "rate_present": 0.7094521522521973,
-   "lift": -0.0006624460220336914,
-   "z": -0.24333532780246742
-  },
-  {
-   "feature": "stress_level",
-   "miss_frac": 0.07976637656591487,
-   "rate_missing": 0.7090012431144714,
-   "rate_present": 0.7094610333442688,
-   "lift": -0.0004597902297973633,
-   "z": -0.22813451817273367
-  },
-  {
-   "feature": "social_media_hours",
-   "miss_frac": 0.19381111967704656,
-   "rate_missing": 0.709414541721344,
-   "rate_present": 0.7094267010688782,
-   "lift": -1.2159347534179688e-05,
-   "z": -0.008802181122276542
-  },
-  {
-   "feature": "academic_work_impact",
-   "miss_frac": 0.06396584168512039,
-   "rate_missing": 0.7094563841819763,
-   "rate_present": 0.7094221711158752,
-   "lift": 3.421306610107422e-05,
-   "z": 0.015331483743799402
-  },
-  {
-   "feature": "notifications_per_day",
-   "miss_frac": 0.0977538767286355,
-   "rate_missing": 0.7102420926094055,
-   "rate_present": 0.7093357443809509,
-   "lift": 0.0009063482284545898,
-   "z": 0.4929431994854286
-  },
-  {
-   "feature": "work_study_hours",
-   "miss_frac": 0.07451592420256042,
-   "rate_missing": 0.7106448411941528,
-   "rate_present": 0.7093260884284973,
-   "lift": 0.0013187527656555176,
-   "z": 0.634226942111851
-  },
-  {
-   "feature": "gaming_hours",
-   "miss_frac": 0.18343460583277527,
-   "rate_missing": 0.7105053663253784,
-   "rate_present": 0.7091814875602722,
-   "lift": 0.0013238787651062012,
-   "z": 0.9383321982774018
-  },
-  {
-   "feature": "weekend_screen_time",
-   "miss_frac": 0.16208855184423948,
-   "rate_missing": 0.7106538414955139,
-   "rate_present": 0.7091864943504333,
-   "lift": 0.0014673471450805664,
-   "z": 0.9903310293760929
-  },
-  {
-   "feature": "daily_screen_time_hours",
-   "miss_frac": 0.13864376331597164,
-   "rate_missing": 0.7113004922866821,
-   "rate_present": 0.709122359752655,
-   "lift": 0.0021781325340270996,
-   "z": 1.3784726525679663
-  },
-  {
-   "feature": "app_opens_per_day",
-   "miss_frac": 0.1167393967620764,
-   "rate_missing": 0.7127864956855774,
-   "rate_present": 0.7089799642562866,
-   "lift": 0.0038065314292907715,
-   "z": 2.2384884320856524
-  },
-  {
-   "feature": "age",
-   "miss_frac": 0.04184306788415448,
-   "rate_missing": 0.7134017944335938,
-   "rate_present": 0.7092506289482117,
-   "lift": 0.00415116548538208,
-   "z": 1.5222024319584473
-  },
-  {
-   "feature": "sleep_hours",
-   "miss_frac": 0.06433612152121371,
-   "rate_missing": 0.7133768200874329,
-   "rate_present": 0.7091525793075562,
-   "lift": 0.004224240779876709,
-   "z": 1.8980529200639886
-  }
- ],
- "confound": {
-  "0.001": {
-   "n": 24,
-   "r_spearman": -0.7806025130567962
-  },
-  "0.0005": {
-   "n": 24,
-   "r_spearman": -0.7806025130567962
-  },
-  "0.0002": {
-   "n": 15,
-   "r_spearman": -0.7545706737749017
-  }
- }
+ ]
 }
