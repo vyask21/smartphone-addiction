@@ -57,7 +57,15 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 5 | lgbm_trees2000 | 0.961832 | 0.000952 | |
 | 6 | lgbm_lr01 | 0.962198 | 0.000816 | |
 | 7 | lgbm_lr005 | 0.963210 | 0.000591 | |
-| 8 | lgbm_lr003 | 0.963275 | 0.000549 | |
+| 8 | lgbm_lr003 | 0.963275 | 0.000549 | 0.964780 |
+| 9 | lgbm_bag08_seed42 | 0.963471 | 0.000591 | |
+| 10 | lgbm_bag08_seed2024 | 0.963234 | 0.000899 | |
+| 11 | lgbm_bag08_seed7 | 0.963445 | 0.000478 | |
+| 12 | lgbm_bag08_seedblend3 | 0.963821 | 0.000560 | 0.965090 |
+| 13 | lgbm_bag08_seed2025 | 0.963337 | 0.000731 | |
+| 14 | lgbm_bag08_seed13 | 0.963483 | 0.000552 | |
+| 15 | lgbm_bag08_seedblend5 | 0.963880 | 0.000555 | 0.965080 |
+| 16 | neural_mlp_kaggle | 0.939169 | 0.000759 | not submitted |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
