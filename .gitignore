@@ -28,5 +28,6 @@ submission.csv
 # second copy of the same file drifting out of date.
 kaggle/*/10_neural_kaggle.ipynb
 kaggle/*/12_public_writeup.ipynb
+kaggle/*/13_target_encoding.ipynb
 kaggle/*/out/
 kaggle/*/out_*/
