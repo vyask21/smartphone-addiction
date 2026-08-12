@@ -1048,6 +1048,175 @@
    }
   ]
  },
+ "target_encoding": {
+  "cv": 0.9667823810724869,
+  "sd": 0.00045339845274297596,
+  "vs_same_model_raw": 0.003311848369805359,
+  "paired_sd": 0.00027030808391996584,
+  "folds_won": 5,
+  "seed_cv": {
+   "te42": 0.9667823810724869,
+   "te2024": 0.9667707371023573,
+   "te7": 0.9667285893376194,
+   "te2025": 0.9667433669355111,
+   "te13": 0.9667894194900226
+  }
+ },
+ "combiners": [
+  {
+   "name": "best single model",
+   "auc": 0.9668002879455457,
+   "gain": 0.0,
+   "paired_sd": 0.0,
+   "splits_won": 0
+  },
+  {
+   "name": "rank mean, 5 seeds",
+   "auc": 0.9672337289639643,
+   "gain": 0.0004334410184185566,
+   "paired_sd": 1.0266049366342973e-05,
+   "splits_won": 5
+  },
+  {
+   "name": "rank mean, all 18",
+   "auc": 0.9652460727650588,
+   "gain": -0.0015542151804869286,
+   "paired_sd": 5.8776663895356795e-05,
+   "splits_won": 0
+  },
+  {
+   "name": "logit stack, 5 seeds",
+   "auc": 0.9672318074586792,
+   "gain": 0.0004315195131335825,
+   "paired_sd": 9.806374427543902e-06,
+   "splits_won": 5
+  },
+  {
+   "name": "logit stack, all 18",
+   "auc": 0.9677082743259209,
+   "gain": 0.0009079863803753918,
+   "paired_sd": 1.803318377621806e-05,
+   "splits_won": 5
+  },
+  {
+   "name": "logit stack, 17 no neural",
+   "auc": 0.9676152018717368,
+   "gain": 0.0008149139261911298,
+   "paired_sd": 1.6729749928232447e-05,
+   "splits_won": 5
+  },
+  {
+   "name": "rank mean, best + neural",
+   "auc": 0.9605283637839381,
+   "gain": -0.006271924161607578,
+   "paired_sd": 7.080080688970952e-05,
+   "splits_won": 0
+  },
+  {
+   "name": "logit stack, best + neural",
+   "auc": 0.9668905655408114,
+   "gain": 9.027759526580859e-05,
+   "paired_sd": 6.80090222539322e-06,
+   "splits_won": 5
+  }
+ ],
+ "neural_in_stack": {
+  "gain": 9.307245418426202e-05,
+  "paired_sd": 3.3165068998384373e-06,
+  "splits_won": 5
+ },
+ "stack_coefs": [
+  {
+   "name": "te13",
+   "cv": 0.9667894194900226,
+   "coef": 0.1661686536700836
+  },
+  {
+   "name": "te42",
+   "cv": 0.9667823810724869,
+   "coef": 0.1698624269180501
+  },
+  {
+   "name": "te2024",
+   "cv": 0.9667707371023573,
+   "coef": 0.1643876968929748
+  },
+  {
+   "name": "te2025",
+   "cv": 0.9667433669355111,
+   "coef": 0.1550868561135781
+  },
+  {
+   "name": "te7",
+   "cv": 0.9667285893376194,
+   "coef": 0.13707896946315176
+  },
+  {
+   "name": "bagged_seed_13",
+   "cv": 0.9634827033576115,
+   "coef": 0.08513170605223949
+  },
+  {
+   "name": "bagged_seed_42",
+   "cv": 0.9634705327026813,
+   "coef": 0.09490139210354506
+  },
+  {
+   "name": "bagged_seed_7",
+   "cv": 0.963445428051234,
+   "coef": 0.09061994698070062
+  },
+  {
+   "name": "bagged_seed_2025",
+   "cv": 0.9633374484598652,
+   "coef": 0.06822157570398021
+  },
+  {
+   "name": "lr_0.03",
+   "cv": 0.9632745391279285,
+   "coef": 0.1302179659154745
+  },
+  {
+   "name": "bagged_seed_2024",
+   "cv": 0.9632336420315293,
+   "coef": 0.010133192471048148
+  },
+  {
+   "name": "lr_0.05",
+   "cv": 0.9632098272187225,
+   "coef": 0.10965562107933086
+  },
+  {
+   "name": "lr_0.10",
+   "cv": 0.9621982367135239,
+   "coef": -0.01952483566725401
+  },
+  {
+   "name": "1000_trees",
+   "cv": 0.9621409051321341,
+   "coef": -0.009580320659257933
+  },
+  {
+   "name": "2000_trees",
+   "cv": 0.9618323239022759,
+   "coef": -0.011818217381742786
+  },
+  {
+   "name": "300_trees",
+   "cv": 0.9606048423752365,
+   "coef": -0.13210997492586757
+  },
+  {
+   "name": "anchor_(100_trees)",
+   "cv": 0.9549467010256301,
+   "coef": -0.36190176503531174
+  },
+  {
+   "name": "neural",
+   "cv": 0.9391689164198243,
+   "coef": 0.11775909426086155
+  }
+ ],
  "ledger": [
   {
    "id": 1,
@@ -1240,6 +1409,102 @@
    "lb_private": null,
    "submitted": "no",
    "notes": "embedding MLP 512/256/128, quantile transform + missing mask, AdamW OneCycle, early stop on fold AUC. Kaggle T4, 14.9 min, fold alignment verified. Not submitted: 0.0247 behind the lgbm blend and the blend gate said stop at every weight from 0.05 to 0.50, 0/5 folds. Closes the last diversity hypothesis."
+  },
+  {
+   "id": 17,
+   "utc": "2026-08-11 23:38",
+   "name": "lgbm_bag08_seed42_te",
+   "cv_mean": 0.966782,
+   "cv_std": 0.000453,
+   "folds": 5,
+   "lb_public": 0.96825,
+   "lb_private": null,
+   "submitted": "yes",
+   "notes": "target + frequency encoding on all 12 columns, nested out-of-fold (inner KFold-5, smoothing 10), 12 raw features -> 36. One variable against exp 9: identical model, folds and seed, only the feature set changes. Kaggle CPU 8.6 min, fold alignment verified. Leak checks pass on full data: validation rows 0.0, training rows 8.1e-05 against a prior shift of 1.3e-04, sanity 0.9967. Paired vs exp9 +0.003312, 5/5 folds, sd 0.000270; vs exp15 +0.002902, 5/5 folds. Largest gain since exp 4. Idea from the public notebook by tomasa2, our own implementation and CV."
+  },
+  {
+   "id": 18,
+   "utc": "2026-08-11 23:55",
+   "name": "lgbm_bag08_seed42_te_imp",
+   "cv_mean": 0.966805,
+   "cv_std": 0.000469,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "median-imputed copies of the 9 numeric columns added ALONGSIDE the originals, medians fit inside the fold loop. One variable against row 17. NULL RESULT: +0.000023, paired sd 0.000032, so 0.7 paired sd, wins 4/5 but the magnitude is nothing. Target encoding was 12 paired sd for comparison. The public notebook that reported +0.0012 for this measured it without full target encoding in the baseline; once every column is target-encoded the NaN level already gets its own encoded value, so the imputed columns look redundant. Hypothesis, not tested. Not submitted, not carried forward."
+  },
+  {
+   "id": 19,
+   "utc": "2026-08-12 00:09",
+   "name": "lgbm_bag08_seed42_te_lat",
+   "cv_mean": 0.966651,
+   "cv_std": 0.000515,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "decimal lattice: fractional part and first decimal digit of the 6 float columns, digits also target-encoded. One variable against row 17. NEGATIVE: -0.000132, paired sd 0.000112, wins 1/5. The raw signal is real and large (verified here: 8.90 pts of target-rate swing across the first digit of daily_screen_time_hours, 11.54 for weekend_screen_time, all six columns well outside noise), so this is not a case of a phantom effect. It is subsumed. The digit is a deterministic function of the value, so target-encoding the exact value already carries it; the digit column only adds POOLING across integer parts, which pays only when the per-value estimate is noisy, and at ~500 rows per level it is not. Cost 24 extra features and 3 extra minutes for nothing. Not submitted, not carried forward."
+  },
+  {
+   "id": 20,
+   "utc": "2026-08-12 00:53",
+   "name": "lgbm_bag08_seed2024_te",
+   "cv_mean": 0.966771,
+   "cv_std": 0.000446,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 17's configuration at a different model seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Not submitted on its own; exists to be blended. The five TE seeds span 0.966729 to 0.966789, a range of 6e-05, against the raw-feature seeds' 2.5e-04."
+  },
+  {
+   "id": 21,
+   "utc": "2026-08-12 00:53",
+   "name": "lgbm_bag08_seed7_te",
+   "cv_mean": 0.966729,
+   "cv_std": 0.000433,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 17's configuration at a different model seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Not submitted on its own; exists to be blended. The five TE seeds span 0.966729 to 0.966789, a range of 6e-05, against the raw-feature seeds' 2.5e-04."
+  },
+  {
+   "id": 22,
+   "utc": "2026-08-12 00:53",
+   "name": "lgbm_bag08_seed2025_te",
+   "cv_mean": 0.966743,
+   "cv_std": 0.000427,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 17's configuration at a different model seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Not submitted on its own; exists to be blended. The five TE seeds span 0.966729 to 0.966789, a range of 6e-05, against the raw-feature seeds' 2.5e-04."
+  },
+  {
+   "id": 23,
+   "utc": "2026-08-12 00:53",
+   "name": "lgbm_bag08_seed13_te",
+   "cv_mean": 0.966789,
+   "cv_std": 0.000427,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 17's configuration at a different model seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Not submitted on its own; exists to be blended. The five TE seeds span 0.966729 to 0.966789, a range of 6e-05, against the raw-feature seeds' 2.5e-04."
+  },
+  {
+   "id": 24,
+   "utc": "2026-08-12 00:53",
+   "name": "stack_logit_18",
+   "cv_mean": 0.967665,
+   "cv_std": 0.000432,
+   "folds": 5,
+   "lb_public": 0.96897,
+   "lb_private": null,
+   "submitted": "yes",
+   "notes": "logistic regression on clipped logits of 18 OOF vectors: the 5 target-encoded seeds, the 12 raw-feature LightGBMs and the neural model. Honest gain measured by fitting on half the OOF rows and scoring on the other half over 5 splits: +0.000908 over te42 alone, paired sd 0.000018, 5/5 folds. The CV recorded here is the stacker's in-sample OOF number and is the optimistic one; the split-half figure is the claim. The 5 TE seeds alone are worth +0.000433, so the 12 weaker members roughly double it. THIS OVERTURNS THE REPO'S DIVERSITY CONCLUSION: anchor takes -0.3619 and trees300 -0.1321 as corrections, and the neural model, rejected in row 16, takes +0.1178. Every earlier combiner was equal-weight and structurally could not use a member as a correction."
   }
  ]
 }

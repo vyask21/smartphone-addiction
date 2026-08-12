@@ -66,10 +66,22 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 14 | lgbm_bag08_seed13 | 0.963483 | 0.000552 | |
 | 15 | lgbm_bag08_seedblend5 | 0.963880 | 0.000555 | 0.965080 |
 | 16 | neural_mlp_kaggle | 0.939169 | 0.000759 | not submitted |
+| 17 | lgbm_bag08_seed42_te | 0.966782 | 0.000453 | 0.96825 |
+| 18 | lgbm_bag08_seed42_te_imp | 0.966805 | 0.000469 | null result, not submitted |
+| 19 | lgbm_bag08_seed42_te_lat | 0.966651 | 0.000515 | negative, not submitted |
+| 20 | lgbm_bag08_seed2024_te | 0.966771 | 0.000446 | |
+| 21 | lgbm_bag08_seed7_te | 0.966729 | 0.000433 | |
+| 22 | lgbm_bag08_seed2025_te | 0.966743 | 0.000427 | |
+| 23 | lgbm_bag08_seed13_te | 0.966789 | 0.000427 | |
+| 24 | stack_logit_18 | 0.967665 | 0.000432 | 0.96897 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
 read a difference at the fourth decimal between them. See `NOTES.md`.
+
+Row 24's CV is a stacker fitted and scored on the same out-of-fold matrix, so it reads
+optimistically. Its honest gain, measured by fitting on half the OOF rows and scoring on
+the other half, is +0.000908 over row 17. Every other row is a plain five-fold CV.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.

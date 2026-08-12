@@ -53,10 +53,10 @@ def finish(ax, title, sub=None):
 
 
 # ------------------------------------------------------------------ fig 1: ledger
-# Rows 1 to 15 are the LightGBM line. Row 16 is the neural model at 0.9392, a
-# different family that was never submitted; including it would flatten everything
-# else into a straight line. Named in the title rather than dropped in silence.
-led = [r for r in D["ledger"] if r["id"] <= 15]
+# Every row except 16, the neural model at 0.9392: it is a different family, it was
+# never submitted, and including it would flatten everything else into a straight
+# line. Named in the title rather than dropped in silence.
+led = [r for r in D["ledger"] if r["id"] != 16]
 x = [r["id"] for r in led]
 cv = [r["cv_mean"] for r in led]
 # `is not None`, not truthiness. An unsubmitted row is null here and NaN is truthy,
@@ -72,17 +72,20 @@ ax.plot(lb_x, lb_y, color=ORANGE, lw=0, marker="D", ms=7, label="public leaderbo
 for xi, yi in zip(lb_x, lb_y):
     ax.annotate(f"{yi:.5f}", (xi, yi), textcoords="offset points", xytext=(0, 9),
                 ha="center", fontsize=8.5, color=SECOND)
-ax.annotate("untuned anchor", (1, cv[0]), textcoords="offset points", xytext=(10, 7),
+by_id = {r["id"]: r["cv_mean"] for r in led}
+ax.annotate("untuned anchor", (1, by_id[1]), textcoords="offset points", xytext=(10, 7),
             fontsize=9, color=SECOND)
-ax.annotate("5-seed bagged blend", (15, cv[14]), textcoords="offset points",
+ax.annotate("5-seed bagged blend", (15, by_id[15]), textcoords="offset points",
             xytext=(-6, -20), ha="right", fontsize=9, color=SECOND)
+ax.annotate("target encoding", (17, by_id[17]), textcoords="offset points",
+            xytext=(4, -22), fontsize=9, color=SECOND)
 ax.set_xlabel("experiment")
 ax.set_ylabel("ROC AUC")
 ax.set_xticks(x)
 ax.legend(frameon=False, loc="lower right", labelcolor=SECOND)
-finish(ax, "Every LightGBM experiment in the ledger",
-       "The whole competition is +0.0089 AUC, and all of it is model capacity. "
-       "No feature ever helped.")
+finish(ax, "Every experiment in the ledger",
+       "Fifteen experiments of model capacity and averaging, worth +0.0089 together.\n"
+       "Then one change of representation, worth +0.0029 on its own.")
 fig.tight_layout()
 fig.savefig(OUTDIR / "fig1_ledger.png", bbox_inches="tight")
 plt.close(fig)
@@ -184,7 +187,59 @@ fig.tight_layout()
 fig.savefig(OUTDIR / "fig4_seeds.png", bbox_inches="tight")
 plt.close(fig)
 
-print("wrote fig1_ledger.png fig2_missingness.png fig3_blend.png fig4_seeds.png")
+# ------------------------------------------------------------------- fig 5: stack
+# The correction. Same eighteen models on both sides of the left panel, so the only
+# thing varying is the combiner, and the sign flips.
+comb = {c["name"]: c for c in D["combiners"]}
+SHOW = ["rank mean, 5 seeds", "logit stack, 5 seeds",
+        "rank mean, all 18", "logit stack, all 18"]
+
+fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.9))
+
+ax = axes[0]
+vals = [comb[k]["gain"] for k in SHOW]
+yy = np.arange(len(SHOW))
+ax.barh(yy, vals, color=[ORANGE if v < 0 else BLUE for v in vals], height=0.62,
+        zorder=3)
+ax.axvline(0, color=AXIS, lw=1.2, zorder=4)
+for i, v in enumerate(vals):
+    ax.annotate(f"{v:+.6f}", (v, i), textcoords="offset points",
+                xytext=(8 if v > 0 else -8, 0), va="center",
+                ha="left" if v > 0 else "right", fontsize=9, color=SECOND)
+ax.set_yticks(yy)
+ax.set_yticklabels(SHOW, fontsize=9.5, color=SECOND)
+ax.invert_yaxis()
+ax.set_xlim(min(vals) * 1.55, max(vals) * 1.9)
+ax.set_xlabel("gain over the best single model")
+ax.grid(axis="y", visible=False)
+finish(ax, "The combiner, not the members",
+       "Bottom two rows are the same eighteen models. Averaging them loses;\n"
+       "letting a logistic regression choose the weights wins.")
+
+ax = axes[1]
+co = D["stack_coefs"]
+nn = [c for c in co if c["name"] == "neural"]
+rest = [c for c in co if c["name"] != "neural"]
+ax.axhline(0, color=AXIS, lw=1.2, zorder=1)
+ax.plot([c["cv"] for c in rest], [c["coef"] for c in rest], "o", color=MUTED, ms=7,
+        alpha=0.75, lw=0, zorder=2, label="LightGBM, 17 of them")
+ax.plot([c["cv"] for c in nn], [c["coef"] for c in nn], "o", color=ORANGE, ms=10,
+        mec=SURFACE, mew=1.5, lw=0, zorder=3, label="the neural model")
+ax.annotate("rejected on the evidence\nin the section above",
+            (nn[0]["cv"], nn[0]["coef"]), textcoords="offset points", xytext=(12, -6),
+            fontsize=9, color=SECOND, linespacing=1.35)
+ax.set_xlabel("the member's own cross-validation AUC")
+ax.set_ylabel("its weight in the stack")
+ax.legend(frameon=False, loc="lower right", labelcolor=SECOND, fontsize=9)
+finish(ax, "Weight is not strength",
+       "The weakest member of the eighteen takes the seventh largest weight.\n"
+       "The negative weights are underfit models used as corrections.")
+fig.tight_layout()
+fig.savefig(OUTDIR / "fig5_stack.png", bbox_inches="tight")
+plt.close(fig)
+
+print("wrote fig1_ledger.png fig2_missingness.png fig3_blend.png fig4_seeds.png "
+      "fig5_stack.png")
 print(f"  r(spearman, gain) all pairs = {r_all:+.3f}")
 print(f"  r(spearman, gain) homogeneous = {r_hom:+.3f}  n={len(homog)}")
 print(f"  r(cv gap, gain) = {r_gap:+.3f}")

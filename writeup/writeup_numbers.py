@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import StratifiedKFold
 
@@ -150,7 +151,86 @@ res["neural"] = {
     "weight_curve": curve,
 }
 
-# -------------------------------------------------------------- 5. ledger for CV/LB
+# ------------------------------------------------------------ 5. target encoding
+# The one feature idea that worked, measured against the model it replaced. Paired on
+# identical folds, so the difference is far more precise than either absolute number.
+te = {"te42": "te_bag42_oof.npy", "te2024": "te_seed2024_oof.npy",
+      "te7": "te_seed7_oof.npy", "te2025": "te_seed2025_oof.npy",
+      "te13": "te_seed13_oof.npy"}
+tev = {k: np.load(OOF / v) for k, v in te.items()}
+te_folds = per_fold(tev["te42"])
+d = te_folds - per_fold(vec["bagged seed 42"])
+res["target_encoding"] = {
+    "cv": float(te_folds.mean()), "sd": float(te_folds.std()),
+    "vs_same_model_raw": float(d.mean()), "paired_sd": float(d.std(ddof=1)),
+    "folds_won": int((d > 0).sum()),
+    "seed_cv": {k: float(per_fold(v).mean()) for k, v in tev.items()},
+}
+
+# ------------------------------------------------- 6. the combiner, which was the bug
+# Sections 2 and 4 measured EQUAL-WEIGHT combiners and the conclusion drawn from them
+# was about the data. This holds the member set fixed and varies the combiner, which
+# is the comparison that was never run. Every stacker is fit on half the out-of-fold
+# rows and scored on the other half, five random splits: a stacker fit and scored on
+# the same matrix reads high, and that optimism is exactly what would manufacture the
+# result being claimed here.
+members = dict(tev)
+members.update({k.replace(" ", "_"): v for k, v in vec.items()})
+members["neural"] = neural
+
+
+def logit(p):
+    p = np.clip(p, 1e-9, 1 - 1e-9)
+    return np.clip(np.log(p / (1 - p)), -30, 30)
+
+
+names = list(members)
+L = np.column_stack([logit(members[k]) for k in names])
+R = np.column_stack([pd.Series(members[k]).rank(pct=True).to_numpy() for k in names])
+te_idx = [names.index(k) for k in te]
+nn_idx = [names.index("te42"), names.index("neural")]
+no_nn = [i for i, n in enumerate(names) if n != "neural"]
+
+rng = np.random.default_rng(0)
+rows = []
+for _ in range(5):
+    perm = rng.permutation(len(y))
+    a, b = perm[: len(y) // 2], perm[len(y) // 2:]
+
+    def stack(cols):
+        m = LogisticRegression(C=1.0, max_iter=2000).fit(L[a][:, cols], y[a])
+        return roc_auc_score(y[b], m.decision_function(L[b][:, cols]))
+
+    rows.append({
+        "best single model": roc_auc_score(y[b], members["te42"][b]),
+        "rank mean, 5 seeds": roc_auc_score(y[b], R[b][:, te_idx].mean(axis=1)),
+        "rank mean, all 18": roc_auc_score(y[b], R[b].mean(axis=1)),
+        "logit stack, 5 seeds": stack(te_idx),
+        "logit stack, all 18": stack(list(range(len(names)))),
+        "logit stack, 17 no neural": stack(no_nn),
+        "rank mean, best + neural": roc_auc_score(y[b], R[b][:, nn_idx].mean(axis=1)),
+        "logit stack, best + neural": stack(nn_idx),
+    })
+df = pd.DataFrame(rows)
+base = df["best single model"]
+res["combiners"] = [{"name": c, "auc": float(df[c].mean()),
+                     "gain": float((df[c] - base).mean()),
+                     "paired_sd": float((df[c] - base).std(ddof=1)),
+                     "splits_won": int(((df[c] - base) > 0).sum())}
+                    for c in df.columns]
+dn = df["logit stack, all 18"] - df["logit stack, 17 no neural"]
+res["neural_in_stack"] = {"gain": float(dn.mean()), "paired_sd": float(dn.std(ddof=1)),
+                          "splits_won": int((dn > 0).sum())}
+
+# Coefficients from a fit on all rows, paired with each member's own CV. The point of
+# the figure is that the ordering is not monotone in strength.
+full = LogisticRegression(C=1.0, max_iter=2000).fit(L, y)
+res["stack_coefs"] = sorted(
+    [{"name": n, "cv": float(per_fold(members[n]).mean()), "coef": float(c)}
+     for n, c in zip(names, full.coef_[0])],
+    key=lambda d: -d["cv"])
+
+# -------------------------------------------------------------- 7. ledger for CV/LB
 led = pd.read_csv(REPO / "experiments.csv")
 # NOT `led.where(pd.notna(led), None)`. Assigning None into a float column coerces
 # straight back to NaN, so that idiom silently emits bare NaN, which json.dumps
@@ -165,6 +245,10 @@ OUT.write_text(json.dumps(res, indent=1, allow_nan=False), encoding="utf-8")
 print(f"wrote {OUT}")
 print(f"  {len(pairs)} model pairs")
 print(f"  missingness: largest |z| = {max(abs(m['z']) for m in miss):.2f}")
+print(f"  target encoding: {res['target_encoding']['vs_same_model_raw']:+.6f} "
+      f"over the same model on raw features")
+for c in res["combiners"]:
+    print(f"  {c['name']:28} {c['gain']:+.6f}  {c['splits_won']}/5")
 print(f"  seed saturation: {[round(c['cv'], 6) for c in cum]}")
 best = max(pairs, key=lambda p: p["gain"])
 print(f"  best pair gain: {best['gain']:+.6f} at spearman {best['spearman']:.4f} "
