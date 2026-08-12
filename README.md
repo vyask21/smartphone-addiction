@@ -74,14 +74,16 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 22 | lgbm_bag08_seed2025_te | 0.966743 | 0.000427 | |
 | 23 | lgbm_bag08_seed13_te | 0.966789 | 0.000427 | |
 | 24 | stack_logit_18 | 0.967665 | 0.000432 | 0.96897 |
+| 25 | stack_logit_18_oof | 0.967650 | 0.000437 | not submitted |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
 read a difference at the fourth decimal between them. See `NOTES.md`.
 
 Row 24's CV is a stacker fitted and scored on the same out-of-fold matrix, so it reads
-optimistically. Its honest gain, measured by fitting on half the OOF rows and scoring on
-the other half, is +0.000908 over row 17. Every other row is a plain five-fold CV.
+optimistically. Row 25 is the same stack with the combiner fit inside the fold loop,
+which is the number to read: 0.967650, +0.000867 over row 17 on all five folds. The
+optimism in row 24 turned out to be 1.5e-05. Every other row is a plain five-fold CV.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.

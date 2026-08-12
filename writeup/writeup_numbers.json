@@ -1505,6 +1505,18 @@
    "lb_private": null,
    "submitted": "yes",
    "notes": "logistic regression on clipped logits of 18 OOF vectors: the 5 target-encoded seeds, the 12 raw-feature LightGBMs and the neural model. Honest gain measured by fitting on half the OOF rows and scoring on the other half over 5 splits: +0.000908 over te42 alone, paired sd 0.000018, 5/5 folds. The CV recorded here is the stacker's in-sample OOF number and is the optimistic one; the split-half figure is the claim. The 5 TE seeds alone are worth +0.000433, so the 12 weaker members roughly double it. THIS OVERTURNS THE REPO'S DIVERSITY CONCLUSION: anchor takes -0.3619 and trees300 -0.1321 as corrections, and the neural model, rejected in row 16, takes +0.1178. Every earlier combiner was equal-weight and structurally could not use a member as a correction."
+  },
+  {
+   "id": 25,
+   "utc": "2026-08-12 03:13",
+   "name": "stack_logit_18_oof",
+   "cv_mean": 0.96765,
+   "cv_std": 0.000437,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 24's combiner refit inside the fold loop: for each outer fold the logistic regression is fit on the other four folds of the OOF matrix and scored on the held-out one, so the CV here is out-of-fold for the combiner as well as for the members and IS comparable to every other row in this file, which row 24's was not. One variable against row 24: same 18 members, same folds, same C, only the fitting protocol changes. Paired vs row 17 +0.000867, sd 0.000051, 5/5 folds, against the split-half estimate of +0.000908 recorded in row 24, so the two protocols agree. Optimism removed from row 24's number: only 1.5e-05, which is smaller than expected and is what 18 parameters on 691,369 rows should look like. Coefficients are stable across the five fits, largest fold-to-fold sd 0.0387 (bag2024, the redundant member); the neural model's is 0.1178 +/- 0.0020. NOT SUBMITTED, deliberately: the fold-averaged test ordering correlates with the submitted row 24 at Spearman 0.9999995, so a submission would spend a slot to re-measure an ordering the leaderboard cannot distinguish. Run locally by nbconvert --execute on a clean kernel, notebooks/16_oof_stack.ipynb, outputs kept in the notebook as the run record since there is no Kaggle log for it."
   }
  ]
 }
