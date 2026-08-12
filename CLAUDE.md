@@ -19,6 +19,36 @@ else. If the experiment count passes roughly 15, or if two rows ever become
 impossible to tell apart, that is the signal to move to the module layout in
 `../../template/`.
 
+### That trigger fired, and the decision is not to move. 2026-08-12
+
+The count passed 15 at row 17 on 2026-08-11 and nobody noticed for eight rows. The
+ledger is at 25. Recording the call rather than letting a rule sit quietly broken.
+
+**Not migrating**, for three reasons. There are 20 days to the deadline and the
+workspace rules forbid refactoring in the last week of a competition, so a migration
+started now would be finished inside the window it warns about. The second half of
+the trigger has not fired: no two rows are impossible to tell apart, and that
+condition is the one the layout was actually protecting against. And the count itself
+overstates the problem, because rows 20 to 23 are one seed sweep entered as four rows,
+which is bookkeeping rather than four separate ideas.
+
+**What is being done instead**, since the trigger fired for a reason:
+
+- Every row from 17 onward names the single variable it changes and the row it changes
+  it against, in its own `notes` field. That is the provenance a config hash would
+  have carried.
+- Numbers that come from combining saved out-of-fold vectors rather than from a
+  training run now come from a committed notebook run top to bottom. Row 24 came from
+  a scratch script and that was a real gap; `16_oof_stack.ipynb` closes it.
+
+**Where the cost actually landed**, stated plainly so the next competition can price
+it: row 24 needed a caveat sentence in its notes field to be readable at all, because
+its CV was measured under a different protocol from every row above it. Under the
+module layout that would have been a config difference, visible without prose.
+
+**The next competition starts on the module layout.** This decision is about the cost
+of switching mid-flight, not a defence of the notebook layout.
+
 ## Non-negotiable here
 
 - Read `NOTES.md` before proposing anything. The rejected-ideas list exists so the
