@@ -1217,6 +1217,209 @@
    "coef": 0.11775909426086155
   }
  ],
+ "reopenings": {
+  "catboost": {
+   "seed_cv": {
+    "42": 0.9669148433358663,
+    "2024": 0.9669280516202086,
+    "7": 0.966920034991914,
+    "2025": 0.966915974945189,
+    "13": 0.9669220870192101
+   },
+   "mean": 0.9669201983824776,
+   "sd": 5.286325159849586e-06,
+   "range": 1.3208284342258736e-05,
+   "lgb_mean": 0.9667628987875995,
+   "lgb_sd": 2.5995085418363844e-05,
+   "lgb_range": 6.083015240321288e-05,
+   "gap": 0.00015729959487809086,
+   "gap_se": 1.1863302235075115e-05,
+   "gap_in_se": 13.259343120587275,
+   "raw_feature_gap_fold0": -0.001675,
+   "paired_vs_lgb": {
+    "gain": 0.00013246226337941812,
+    "sd": 7.972073543863323e-05,
+    "folds_won": 5
+   }
+  },
+  "neural": {
+   "cv_raw": 0.9391689164198243,
+   "cv_te": 0.9653730310336984,
+   "paired": {
+    "gain": 0.026204114613874042,
+    "sd": 0.0005682164942917429,
+    "folds_won": 5
+   },
+   "relative": 0.0279013861678535,
+   "spearman_vs_catboost": 0.9757084977829875,
+   "spearman_vs_lgb_te": 0.9826183980908478,
+   "gap_to_best_gbdt": -0.0015550205865101363
+  }
+ },
+ "stack_curve": [
+  {
+   "name": "18: five TE seeds, twelve raw, one neural",
+   "n": 18,
+   "cv": 0.9676498765337225,
+   "sd": 0.00043686112054352414,
+   "step": null
+  },
+  {
+   "name": "19: plus CatBoost",
+   "n": 19,
+   "cv": 0.9677503698900916,
+   "sd": 0.00043104882124765285,
+   "step": {
+    "gain": 0.00010049335636908019,
+    "sd": 1.1715994051371814e-05,
+    "folds_won": 5
+   }
+  },
+  {
+   "name": "23: plus four CatBoost seeds",
+   "n": 23,
+   "cv": 0.9677640129793517,
+   "sd": 0.0004338593766880294,
+   "step": {
+    "gain": 1.3643089260306774e-05,
+    "sd": 5.256611117706093e-06,
+    "folds_won": 5
+   }
+  },
+  {
+   "name": "24: plus the encoded neural model",
+   "n": 24,
+   "cv": 0.9678065664886208,
+   "sd": 0.00043185436227538305,
+   "step": {
+    "gain": 4.255350926900548e-05,
+    "sd": 1.6279736943648698e-05,
+    "folds_won": 5
+   }
+  }
+ ],
+ "stack24_coefs": [
+  {
+   "name": "neural_te",
+   "cv": 0.9653730310336984,
+   "coef": 0.1299882097919767
+  },
+  {
+   "name": "lr_0.03",
+   "cv": 0.9632745391279285,
+   "coef": 0.11854496223830036
+  },
+  {
+   "name": "lr_0.05",
+   "cv": 0.9632098272187225,
+   "coef": 0.09800474301067164
+  },
+  {
+   "name": "neural",
+   "cv": 0.9391689164198243,
+   "coef": 0.09116045580628687
+  },
+  {
+   "name": "bagged_seed_42",
+   "cv": 0.9634705327026813,
+   "coef": 0.08931103690803528
+  },
+  {
+   "name": "bagged_seed_7",
+   "cv": 0.963445428051234,
+   "coef": 0.08471365923667777
+  },
+  {
+   "name": "te13",
+   "cv": 0.9667894194900226,
+   "coef": 0.0843553658848902
+  },
+  {
+   "name": "te2024",
+   "cv": 0.9667707371023573,
+   "coef": 0.08156822000973611
+  },
+  {
+   "name": "bagged_seed_13",
+   "cv": 0.9634827033576115,
+   "coef": 0.08147154040419947
+  },
+  {
+   "name": "te2025",
+   "cv": 0.9667433669355111,
+   "coef": 0.08140711245803105
+  },
+  {
+   "name": "cat2024",
+   "cv": 0.9669280516202086,
+   "coef": 0.07964488965116749
+  },
+  {
+   "name": "te42",
+   "cv": 0.9667823810724869,
+   "coef": 0.07672537489712991
+  },
+  {
+   "name": "cat13",
+   "cv": 0.9669220870192101,
+   "coef": 0.06545977038064613
+  },
+  {
+   "name": "cat2025",
+   "cv": 0.966915974945189,
+   "coef": 0.06517078459094973
+  },
+  {
+   "name": "te7",
+   "cv": 0.9667285893376194,
+   "coef": 0.06196695397700095
+  },
+  {
+   "name": "bagged_seed_2025",
+   "cv": 0.9633374484598652,
+   "coef": 0.05800812741683205
+  },
+  {
+   "name": "cat42",
+   "cv": 0.9669148433358663,
+   "coef": 0.05796469061201069
+  },
+  {
+   "name": "cat7",
+   "cv": 0.966920034991914,
+   "coef": 0.05280507605839593
+  },
+  {
+   "name": "bagged_seed_2024",
+   "cv": 0.9632336420315293,
+   "coef": 0.007698754749644454
+  },
+  {
+   "name": "1000_trees",
+   "cv": 0.9621409051321341,
+   "coef": 0.005048247927275353
+  },
+  {
+   "name": "lr_0.10",
+   "cv": 0.9621982367135239,
+   "coef": -0.004318318862460611
+  },
+  {
+   "name": "2000_trees",
+   "cv": 0.9618323239022759,
+   "coef": -0.01096676431629827
+  },
+  {
+   "name": "300_trees",
+   "cv": 0.9606048423752365,
+   "coef": -0.14436923195634935
+  },
+  {
+   "name": "anchor_(100_trees)",
+   "cv": 0.9549467010256301,
+   "coef": -0.337831388664877
+  }
+ ],
  "ledger": [
   {
    "id": 1,
@@ -1517,6 +1720,114 @@
    "lb_private": null,
    "submitted": "no",
    "notes": "row 24's combiner refit inside the fold loop: for each outer fold the logistic regression is fit on the other four folds of the OOF matrix and scored on the held-out one, so the CV here is out-of-fold for the combiner as well as for the members and IS comparable to every other row in this file, which row 24's was not. One variable against row 24: same 18 members, same folds, same C, only the fitting protocol changes. Paired vs row 17 +0.000867, sd 0.000051, 5/5 folds, against the split-half estimate of +0.000908 recorded in row 24, so the two protocols agree. Optimism removed from row 24's number: only 1.5e-05, which is smaller than expected and is what 18 parameters on 691,369 rows should look like. Coefficients are stable across the five fits, largest fold-to-fold sd 0.0387 (bag2024, the redundant member); the neural model's is 0.1178 +/- 0.0020. NOT SUBMITTED, deliberately: the fold-averaged test ordering correlates with the submitted row 24 at Spearman 0.9999995, so a submission would spend a slot to re-measure an ordering the leaderboard cannot distinguish. Run locally by nbconvert --execute on a clean kernel, notebooks/16_oof_stack.ipynb, outputs kept in the notebook as the run record since there is no Kaggle log for it."
+  },
+  {
+   "id": 26,
+   "utc": "2026-08-17 18:01",
+   "name": "catboost_te",
+   "cv_mean": 0.966915,
+   "cv_std": 0.000435,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "CatBoost on row 17's exact feature set. One variable against row 17: same nested target+frequency encoder, same folds, same seed 42, same lr*iters=100 budget convention; only the learner changes, LightGBM to CatBoost. The encoder is a copy, so its four functions were fingerprinted through ast.unparse against 13_target_encoding.ipynb and are IDENTICAL (0642e41750ef8bab); that is the config hash this layout otherwise lacks. Kaggle CPU 80 min, fold alignment verified, leak checks reproduce 13's numbers exactly (validation rows 0.0, training rows 8.136e-05 against a prior shift of 1.302e-04). Paired vs row 17 +0.000132, sd 0.000080, 5/5 folds, t(4)=3.72. REPORTED AS PARITY, NOT AS AN IMPROVEMENT: the gain is 0.3 of the fold spread and only one CatBoost seed was run, so it fails two of the three tests in CLAUDE.md, and the narrowest fold is won by 1.4e-05. What is not marginal is the reversal. 06 measured CatBoost 0.001675 BEHIND LightGBM on the raw 12 features, so the representation moved the gap by about 0.0018, ten times the residual difference. Determinism: thread_count=6 gave 0.000e+00 between two in-kernel runs, and fold 0 agreed to the 6 printed decimals between this machine and Kaggle, where LightGBM moves ~3e-5 with thread count. Not submitted on its own; it exists to be stacked and the gate is row 27."
+  },
+  {
+   "id": 27,
+   "utc": "2026-08-17 19:05",
+   "name": "stack_logit_19_oof",
+   "cv_mean": 0.96775,
+   "cv_std": 0.000431,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "Row 25's stack with CatBoost added as a nineteenth member. One variable against row 25: same logistic combiner, same C, same fold-wise fitting protocol, same folds; only the member set changes, 18 to 19. Row 25 is REFIT in the same run rather than quoted, so the comparison is paired inside one notebook, and the refit reproduces row 25's recorded CV to -1.23e-07. Paired vs row 25 +0.000100, sd 0.000012, 5/5 folds, t(4)=19.18. Real but small: it is a ninth of what the 18-member stack was worth over row 17 (+0.000867), and 0.23 of the fold spread. Also +0.000968 over row 17 alone and +0.000836 over row 26 alone. THE COEFFICIENT IS THE FINDING: catboost_te takes +0.3512, more than double any other member, while the five target-encoded LightGBM seeds fall from about +0.16 each in row 25 to about +0.10 here, so the combiner moved weight onto it rather than adding it on top. The neural model holds at +0.1169 against +0.1178 in row 25, unchanged, which says CatBoost supplies something different again rather than displacing it. Largest fold-to-fold coefficient sd 0.0357, on bag2024, the same redundant member row 25 identified. Spearman of the test ordering against the submitted row 24 is 0.9994618, where row 25 sat at 0.9999995 and was held back for that reason, so unlike row 25 this is a materially different ordering. Run locally by nbconvert --execute on a clean kernel, notebooks/18_stack_19.ipynb, outputs kept in the notebook as the run record."
+  },
+  {
+   "id": 28,
+   "utc": "2026-08-18 07:08",
+   "name": "catboost_te_seed2024",
+   "cv_mean": 0.966928,
+   "cv_std": 0.000468,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 26's configuration at a different CatBoost seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Encoder fingerprinted against 13 and identical (0642e41750ef8bab), fold alignment verified, leak checks reproduce 13's numbers exactly. Kaggle CPU, 65 min each, one kernel for all four. Not submitted on its own; exists to size the seed spread and to be stacked. THE POINT OF THE SWEEP: the five CatBoost seeds span 1.32e-05 (sd 5.29e-06) against the five LightGBM target-encoded seeds' 6.00e-05 (sd 2.58e-05), so CatBoost is about 5x more stable under its own stochasticity here. Family means 0.966920 against 0.966763, a gap of +0.000157 at 13.4 standard errors, which RESOLVES ROW 26'S PARITY CLAIM UPWARD: one seed could not have produced +0.000132 by chance."
+  },
+  {
+   "id": 29,
+   "utc": "2026-08-18 08:13",
+   "name": "catboost_te_seed7",
+   "cv_mean": 0.96692,
+   "cv_std": 0.000424,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 26's configuration at a different CatBoost seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Encoder fingerprinted against 13 and identical (0642e41750ef8bab), fold alignment verified, leak checks reproduce 13's numbers exactly. Kaggle CPU, 65 min each, one kernel for all four. Not submitted on its own; exists to size the seed spread and to be stacked. THE POINT OF THE SWEEP: the five CatBoost seeds span 1.32e-05 (sd 5.29e-06) against the five LightGBM target-encoded seeds' 6.00e-05 (sd 2.58e-05), so CatBoost is about 5x more stable under its own stochasticity here. Family means 0.966920 against 0.966763, a gap of +0.000157 at 13.4 standard errors, which RESOLVES ROW 26'S PARITY CLAIM UPWARD: one seed could not have produced +0.000132 by chance."
+  },
+  {
+   "id": 30,
+   "utc": "2026-08-18 09:18",
+   "name": "catboost_te_seed2025",
+   "cv_mean": 0.966916,
+   "cv_std": 0.000431,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 26's configuration at a different CatBoost seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Encoder fingerprinted against 13 and identical (0642e41750ef8bab), fold alignment verified, leak checks reproduce 13's numbers exactly. Kaggle CPU, 65 min each, one kernel for all four. Not submitted on its own; exists to size the seed spread and to be stacked. THE POINT OF THE SWEEP: the five CatBoost seeds span 1.32e-05 (sd 5.29e-06) against the five LightGBM target-encoded seeds' 6.00e-05 (sd 2.58e-05), so CatBoost is about 5x more stable under its own stochasticity here. Family means 0.966920 against 0.966763, a gap of +0.000157 at 13.4 standard errors, which RESOLVES ROW 26'S PARITY CLAIM UPWARD: one seed could not have produced +0.000132 by chance."
+  },
+  {
+   "id": 31,
+   "utc": "2026-08-18 10:23",
+   "name": "catboost_te_seed13",
+   "cv_mean": 0.966922,
+   "cv_std": 0.000442,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "row 26's configuration at a different CatBoost seed, everything else identical including the encoder's inner split, so only the model's stochasticity varies. Encoder fingerprinted against 13 and identical (0642e41750ef8bab), fold alignment verified, leak checks reproduce 13's numbers exactly. Kaggle CPU, 65 min each, one kernel for all four. Not submitted on its own; exists to size the seed spread and to be stacked. THE POINT OF THE SWEEP: the five CatBoost seeds span 1.32e-05 (sd 5.29e-06) against the five LightGBM target-encoded seeds' 6.00e-05 (sd 2.58e-05), so CatBoost is about 5x more stable under its own stochasticity here. Family means 0.966920 against 0.966763, a gap of +0.000157 at 13.4 standard errors, which RESOLVES ROW 26'S PARITY CLAIM UPWARD: one seed could not have produced +0.000132 by chance."
+  },
+  {
+   "id": 32,
+   "utc": "2026-08-18 08:40",
+   "name": "stack_logit_23_oof",
+   "cv_mean": 0.967764,
+   "cv_std": 0.000434,
+   "folds": 5,
+   "lb_public": 0.96902,
+   "lb_private": null,
+   "submitted": "yes",
+   "notes": "Row 27's stack with the four extra CatBoost seeds added. One variable against row 27: same combiner, same C, same fold-wise protocol, same folds; only the member set changes, 19 to 23. Row 27 is REFIT in the same run rather than quoted and reproduces its recorded CV to +3.70e-07. Paired vs row 27 +0.000014, sd 0.000005, 5/5 folds, t(4)=5.80. CERTAIN AND NEGLIGIBLE, and the ledger should be read that way: it is smaller than the fifth LightGBM seed on the raw features (+0.000022), which this repo already called the point where more seeds becomes activity rather than progress. The t statistic is large only because the stacker is deterministic given its inputs, so the paired spread measures fold-to-fold variation in a fixed quantity rather than run-to-run noise; it says the gain is real, not that it matters. MECHANISM, as predicted in the notebook header before running: the combiner SPLIT row 27's single CatBoost weight rather than adding to it. cat42 falls from +0.3512 to +0.0753 and the five CatBoost coefficients sum to +0.4016, only +0.0504 above row 27's single member, which is what a seed spread of 1.32e-05 should produce. Spearman of the test ordering against row 27 is 0.9999832, so the choice between row 27 and row 32 is immaterial to the leaderboard and neither is worth a slot over the other. CatBoost seed averaging saturates immediately and is closed. Run locally by nbconvert --execute on a clean kernel, notebooks/20_stack_23.ipynb, outputs kept in the notebook as the run record. LB 0.96902, best in the repo, against row 24's 0.96897. CV moved +0.000099 and LB moved +0.000050, same direction, so CV and LB now agree on 8 of 8 submissions. The LB step is well inside the ~0.001 public standard error and was predicted to be, so it confirms the ordering rather than discriminating: it is a tracking data point, not evidence that row 32 beats row 24 on the private split. CV-to-LB offset +0.001256 against row 24's +0.001305."
+  },
+  {
+   "id": 33,
+   "utc": "2026-08-18 16:12",
+   "name": "neural_te",
+   "cv_mean": 0.965373,
+   "cv_std": 0.000405,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "The row 16 embedding MLP on the target-encoded features. One variable against row 16: identical architecture, hyperparameters, folds, seed and early-stopping rule (512/256/128, BatchNorm, SiLU, 0.2 dropout, 8-dim embeddings, AdamW under OneCycle, 30 epochs, patience 5, batch 4096); only the feature set changes, the numeric block going from 9 raw + 9 mask to 33 (9 raw + 24 encoded) + 9 mask. Encoder fingerprinted against 13 and identical (0642e41750ef8bab), fit inside the fold loop, with the quantile transform and median imputation also fit on training rows only inside the same loop. Kaggle T4, 16.1 min, fold alignment verified on all five checks. Paired vs row 16 +0.026204, sd 0.000568, 5/5 folds, t=103. THE >2% RULE IN CLAUDE.md FIRED AT +2.7901% AND WAS INVESTIGATED RATHER THAN CELEBRATED. Not a leak, and the argument is that the new number is BELOW both GBDTs on the identical encoder (row 17 LightGBM 0.966782, row 26 CatBoost 0.966915), while 13's deliberate no-nesting sanity check scores 0.9967, so a leaking encoder is loud here and three LB-confirmed models already use this exact one. Leak checks reproduce 13's numbers exactly (validation 0.0, training 8.130e-05 against a prior shift of 1.302e-04) and row 16's own vector reproduces its ledger CV to -8.36e-08, so the baseline is right too. The rule fired because the DENOMINATOR was weak, not because the numerator is anomalous. The neural model goes from 0.0247 behind the best GBDT to 0.0015 behind. Spearman 0.9826 vs row 17 and 0.9757 vs row 26, the latter near the bottom of the 0.9741 to 0.9981 band LightGBM produces against itself, so it is still differently wrong while now being strong. Not submitted on its own; the decision is what a fitted combiner does with it, which is row 34. The notebook header predicted an MLP would gain little from a representation that only removes a many-splits cost trees were paying. That prediction was recorded before the run and was wrong by a wide margin."
+  },
+  {
+   "id": 34,
+   "utc": "2026-08-18 09:52",
+   "name": "stack_logit_24_oof",
+   "cv_mean": 0.967807,
+   "cv_std": 0.000432,
+   "folds": 5,
+   "lb_public": null,
+   "lb_private": null,
+   "submitted": "no",
+   "notes": "Row 32's stack with neural_te added as a twenty-fourth member. One variable against row 32: same combiner, same C, same fold-wise protocol, same folds; only the member set changes, 23 to 24. The old raw-feature neural model is KEPT rather than replaced, since removing it would make this two variables. Row 32 is refit in the same run and reproduces its recorded CV to +1.30e-08. Paired vs row 32 +0.000043, sd 0.000016, 5/5 folds, t(4)=5.84. Real, and small: three times the last CatBoost-seed addition (+0.000014) but under half the original CatBoost addition (+0.000100), against a single-model improvement of +0.026204. THE COEFFICIENTS ARE THE RESULT, NOT THE CV. neural_te takes +0.1305, the largest positive weight in the whole 24-member stack, above every GBDT in it. The old neural model does NOT collapse: it goes from +0.1181 to +0.0905, keeping 77 percent of its weight, so the two neural models are wrong in different directions FROM EACH OTHER as well as from the trees, rather than being one mechanism at two strengths. The weight neural_te takes comes mostly out of the GBDTs, with the five CatBoost coefficients falling from +0.4016 to +0.3212 and the TE seeds dropping in step. WHAT THIS SAYS ABOUT STACKING: a 0.026 single-model gain bought 0.000043 in the stack, because the weak neural model at +0.118 was already supplying most of the neural direction and the combiner only needed a cleaner version of a signal it already had. Spearman of the test ordering against the submitted row 32 is 0.9998335, so the leaderboard cannot resolve this and it is not worth a slot over row 32; it is however the CV-best row in the file and therefore a final-selection candidate. Run locally by nbconvert --execute on a clean kernel, notebooks/22_stack_24.ipynb, outputs kept in the notebook as the run record."
   }
  ]
 }

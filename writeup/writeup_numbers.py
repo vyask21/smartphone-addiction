@@ -230,6 +230,111 @@ res["stack_coefs"] = sorted(
      for n, c in zip(names, full.coef_[0])],
     key=lambda d: -d["cv"])
 
+# ------------------------------------------------- 8. the two reopenings, 2026-08-17/18
+# Section 6 established that the diversity conclusion was a fact about the combiner.
+# What it did not do is go back to the models that had been rejected under BOTH the old
+# combiner and the old feature set. Two had. Re-running them is what this section
+# measures, and it took ten days to see that it was the obvious next move.
+
+cat = {s_: np.load(OOF / f) for s_, f in [
+    (42, "catboost_te_oof.npy"),
+    (2024, "catboost_te_seed2024_oof.npy"),
+    (7, "catboost_te_seed7_oof.npy"),
+    (2025, "catboost_te_seed2025_oof.npy"),
+    (13, "catboost_te_seed13_oof.npy")]}
+nte = np.load(OOF / "neural_te_oof.npy")
+
+cat_cv = {int(k): float(per_fold(v).mean()) for k, v in cat.items()}
+lgb_cv = {int(k.replace("te", "") or 42): v
+          for k, v in res["target_encoding"]["seed_cv"].items()}
+c_arr = np.array(sorted(cat_cv.values()))
+l_arr = np.array(sorted(lgb_cv.values()))
+gap = float(c_arr.mean() - l_arr.mean())
+gap_se = float(np.sqrt(c_arr.var(ddof=1) / len(c_arr) + l_arr.var(ddof=1) / len(l_arr)))
+
+# Paired against the LightGBM it replaces, on identical folds.
+dc = per_fold(cat[42]) - te_folds
+dn = per_fold(nte) - per_fold(neural)
+
+res["reopenings"] = {
+    "catboost": {
+        "seed_cv": cat_cv,
+        "mean": float(c_arr.mean()), "sd": float(c_arr.std(ddof=1)),
+        "range": float(c_arr.max() - c_arr.min()),
+        "lgb_mean": float(l_arr.mean()), "lgb_sd": float(l_arr.std(ddof=1)),
+        "lgb_range": float(l_arr.max() - l_arr.min()),
+        "gap": gap, "gap_se": gap_se, "gap_in_se": gap / gap_se,
+        # From the 2026-08-04 probe in 06_catboost.ipynb: ONE fold, raw 12 features,
+        # 138,274 held-out rows. Labelled as a single fold wherever it is quoted,
+        # because it is not comparable to the five-fold numbers beside it.
+        "raw_feature_gap_fold0": -0.001675,
+        "paired_vs_lgb": {"gain": float(dc.mean()), "sd": float(dc.std(ddof=1)),
+                          "folds_won": int((dc > 0).sum())},
+    },
+    "neural": {
+        "cv_raw": float(per_fold(neural).mean()),
+        "cv_te": float(per_fold(nte).mean()),
+        "paired": {"gain": float(dn.mean()), "sd": float(dn.std(ddof=1)),
+                   "folds_won": int((dn > 0).sum())},
+        "relative": float(dn.mean() / per_fold(neural).mean()),
+        "spearman_vs_catboost": float(spearmanr(nte, cat[42]).statistic),
+        "spearman_vs_lgb_te": float(spearmanr(nte, tev["te42"]).statistic),
+        "gap_to_best_gbdt": float(per_fold(nte).mean() - c_arr.max()),
+    },
+}
+
+# The saturation curve. Every stack here is fit INSIDE the fold loop, which is the
+# protocol that makes its CV comparable to a single model's, and it is a different
+# protocol from the split-half one used in section 6. Four member sets, each adding to
+# the one above it, so the marginal value of each addition is readable directly.
+stack_members = dict(members)
+for k, v in cat.items():
+    stack_members[f"cat{k}"] = v
+stack_members["neural_te"] = nte
+SN = list(stack_members)
+SL = np.column_stack([logit(stack_members[k]) for k in SN])
+
+SETS = [
+    ("18: five TE seeds, twelve raw, one neural", [n for n in SN
+                                                   if not n.startswith("cat")
+                                                   and n != "neural_te"]),
+    ("19: plus CatBoost", [n for n in SN if n in ("cat42",) or
+                           (not n.startswith("cat") and n != "neural_te")]),
+    ("23: plus four CatBoost seeds", [n for n in SN if n != "neural_te"]),
+    ("24: plus the encoded neural model", SN),
+]
+
+
+def fold_wise(cols):
+    """CV of a logistic stack fit on four folds and scored on the fifth."""
+    o = np.zeros(len(y))
+    for f in range(5):
+        tr, va = folds != f, folds == f
+        m = LogisticRegression(C=1.0, max_iter=2000).fit(SL[np.ix_(tr, cols)], y[tr])
+        o[va] = m.decision_function(SL[np.ix_(va, cols)])
+    return np.array([roc_auc_score(y[folds == f], o[folds == f]) for f in range(5)])
+
+
+curve, prev = [], None
+for label, keep in SETS:
+    pf = fold_wise([SN.index(n) for n in keep])
+    step = None if prev is None else {
+        "gain": float((pf - prev).mean()),
+        "sd": float((pf - prev).std(ddof=1)),
+        "folds_won": int(((pf - prev) > 0).sum())}
+    curve.append({"name": label, "n": len(keep), "cv": float(pf.mean()),
+                  "sd": float(pf.std()), "step": step})
+    prev = pf
+res["stack_curve"] = curve
+
+# The 24-member coefficients, which are the actual result of the second reopening:
+# the encoded neural model takes the largest weight in the stack and the WEAK one
+# does not collapse.
+f24 = LogisticRegression(C=1.0, max_iter=2000).fit(SL, y)
+res["stack24_coefs"] = sorted(
+    [{"name": n, "cv": float(per_fold(stack_members[n]).mean()), "coef": float(c)}
+     for n, c in zip(SN, f24.coef_[0])], key=lambda d: -d["coef"])
+
 # -------------------------------------------------------------- 7. ledger for CV/LB
 led = pd.read_csv(REPO / "experiments.csv")
 # NOT `led.where(pd.notna(led), None)`. Assigning None into a float column coerces
@@ -262,3 +367,17 @@ print(f"  neural CV {n['cv']:.6f}, spearman vs blend {n['spearman_vs_blend']:.4f
       f"(within-family band {n['within_family_spearman_min']:.4f}"
       f" to {n['within_family_spearman_max']:.4f})")
 print(f"  best neural weight: {max(n['weight_curve'], key=lambda c: c['gain'])}")
+r = res["reopenings"]
+print(f"  catboost TE: mean {r['catboost']['mean']:.6f} vs lgbm "
+      f"{r['catboost']['lgb_mean']:.6f}, gap {r['catboost']['gap']:+.6f} "
+      f"({r['catboost']['gap_in_se']:.1f} se), seed range {r['catboost']['range']:.2e} "
+      f"vs {r['catboost']['lgb_range']:.2e}")
+print(f"  neural TE: {r['neural']['cv_raw']:.6f} -> {r['neural']['cv_te']:.6f} "
+      f"({r['neural']['paired']['gain']:+.6f}, {r['neural']['relative']:+.2%}), "
+      f"still {r['neural']['gap_to_best_gbdt']:+.6f} from the best GBDT")
+for c in res["stack_curve"]:
+    st = "" if c["step"] is None else (f"  step {c['step']['gain']:+.6f} "
+                                      f"({c['step']['folds_won']}/5)")
+    print(f"  stack {c['n']:>2}: {c['cv']:.6f}{st}")
+top = res["stack24_coefs"][0]
+print(f"  largest coefficient in the 24-member stack: {top['name']} {top['coef']:+.4f}")
