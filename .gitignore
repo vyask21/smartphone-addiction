@@ -33,3 +33,4 @@ kaggle/*/out/
 kaggle/*/out_*/
 kaggle/*/14_features_v2.ipynb
 kaggle/*/15_te_seeds.ipynb
+kaggle/*/17_catboost_te.ipynb
