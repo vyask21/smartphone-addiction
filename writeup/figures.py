@@ -238,8 +238,71 @@ fig.tight_layout()
 fig.savefig(OUTDIR / "fig5_stack.png", bbox_inches="tight")
 plt.close(fig)
 
+
+# -------------------------------------------------------------- fig 6: the reopenings
+# The second half of the correction. Left: CatBoost on the features it had never been
+# tried on, five seeds each so the spread is visible and not just the level. Right: what
+# each addition to the stack was actually worth, which is the number that keeps the
+# section honest.
+r = D["reopenings"]
+cat = r["catboost"]
+lgb_seeds = sorted(D["target_encoding"]["seed_cv"].values())
+cat_seeds = sorted(cat["seed_cv"].values())
+
+fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.9))
+
+ax = axes[0]
+for i, (vals, colour, lbl) in enumerate([(lgb_seeds, MUTED, "LightGBM"),
+                                         (cat_seeds, BLUE, "CatBoost")]):
+    ax.plot(vals, [i] * len(vals), "o", color=colour, ms=9, alpha=0.85, lw=0, zorder=3)
+    m = sum(vals) / len(vals)
+    ax.plot([m], [i], "|", color=INK, ms=26, mew=2, zorder=4)
+    ax.annotate(f"{lbl}   spread {max(vals) - min(vals):.1e}", (m, i),
+                textcoords="offset points", xytext=(0, 17), ha="center",
+                fontsize=9.5, color=SECOND)
+ax.set_yticks([0, 1])
+ax.set_yticklabels([])
+ax.set_ylim(-0.6, 1.7)
+ax.set_xlabel("cross-validation AUC, five model seeds each")
+ax.grid(axis="y", visible=False)
+finish(ax, "CatBoost, on the features it was never tried on",
+       f"Family means differ by {cat['gap']:+.6f}, "
+       f"{cat['gap_in_se']:.1f} standard errors.\n"
+       f"On the raw features it had lost by 0.001675.")
+
+ax = axes[1]
+cur = D["stack_curve"]
+xs = [c["n"] for c in cur]
+ys = [c["cv"] for c in cur]
+ax.plot(xs, ys, "-o", color=BLUE, ms=8, lw=2, zorder=3)
+for c in cur:
+    if c["step"]:
+        ax.annotate(f"{c['step']['gain']:+.6f}", (c["n"], c["cv"]),
+                    textcoords="offset points", xytext=(-6, 10), ha="right",
+                    fontsize=9, color=SECOND)
+ax.annotate("eighteen members,\nwhere the correction ended", (xs[0], ys[0]),
+            textcoords="offset points", xytext=(14, -4), fontsize=9, color=SECOND,
+            linespacing=1.35)
+ax.set_xticks(xs)
+ax.set_xlabel("members in the stack")
+ax.set_ylabel("stack CV, combiner fit inside the fold loop")
+finish(ax, "Every addition after the first is worth less",
+       "Two rejected models earned back, one of them the largest single-model\n"
+       f"gain of the competition, for {ys[-1] - ys[0]:+.6f} of stack CV in total.")
+fig.tight_layout()
+fig.savefig(OUTDIR / "fig6_reopenings.png", bbox_inches="tight")
+plt.close(fig)
+
 print("wrote fig1_ledger.png fig2_missingness.png fig3_blend.png fig4_seeds.png "
-      "fig5_stack.png")
+      "fig5_stack.png fig6_reopenings.png")
 print(f"  r(spearman, gain) all pairs = {r_all:+.3f}")
 print(f"  r(spearman, gain) homogeneous = {r_hom:+.3f}  n={len(homog)}")
 print(f"  r(cv gap, gain) = {r_gap:+.3f}")
+nte = r["neural"]
+print(f"  catboost family gap {cat['gap']:+.6f} at {cat['gap_in_se']:.1f} se, "
+      f"seed spread {cat['range']:.2e} vs LightGBM {cat['lgb_range']:.2e}")
+print(f"  neural {nte['cv_raw']:.6f} -> {nte['cv_te']:.6f} "
+      f"({nte['paired']['gain']:+.6f})")
+print(f"  stack curve " + " ".join(f"{c['n']}:{c['cv']:.6f}" for c in cur))
+print(f"  total bought by both reopenings: "
+      f"{cur[-1]['cv'] - cur[0]['cv']:+.6f} of stack CV")
