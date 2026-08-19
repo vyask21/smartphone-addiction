@@ -10,3 +10,4 @@ matplotlib
 seaborn
 jupyterlab
 ipywidgets
+xgboost
