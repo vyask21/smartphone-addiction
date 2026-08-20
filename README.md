@@ -107,6 +107,10 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 55 | xgb_pair_base | 0.967099 | 0.000414 | |
 | 56 | xgb_pair_top9 | 0.967176 | 0.000475 | |
 | 57 | xgb_pair_all66 | 0.966589 | 0.000446 | |
+| 58 | stack_29_refit | 0.967925 | 0.000428 | |
+| 59 | stack_30_top9 | 0.967968 | 0.000436 | 0.96929 |
+| 60 | stack_30_all66 | 0.967934 | 0.000427 | |
+| 61 | stack_31_both | 0.967967 | 0.000436 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -137,9 +141,11 @@ correctly called the fifth and sixth in advance.
 Rows 50 to 54 also close a gap rather than only adding a null: after them there is no
 constant in this pipeline that has never been varied.
 
-Row 44 is the best row here on both axes, CV 0.967925 and public LB 0.96924, and it is
-a 29 member stack. Row 45 removes five of those members and costs four millionths,
-which is a result about what the stack was already ignoring rather than a better model.
+Row 59 is the best row here on both axes, CV 0.967968 and public LB 0.96929, and it is
+a 30 member stack: row 44's 29 plus one pair-encoded XGBoost. That member is a null as a
+model, rows 55 to 57, and takes the second largest weight in the stack. Row 45 removes
+five members from row 44 and costs four millionths, which is a result about what the
+stack was already ignoring rather than a better model.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
