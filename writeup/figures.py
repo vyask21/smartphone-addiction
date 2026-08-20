@@ -69,23 +69,33 @@ ax.plot(x, cv, color=BLUE, lw=2, marker="o", ms=5.5, label="cross-validation",
         zorder=3, mec=SURFACE, mew=1.5)
 ax.plot(lb_x, lb_y, color=ORANGE, lw=0, marker="D", ms=7, label="public leaderboard",
         zorder=4, mec=SURFACE, mew=1.5)
-for xi, yi in zip(lb_x, lb_y):
-    ax.annotate(f"{yi:.5f}", (xi, yi), textcoords="offset points", xytext=(0, 9),
-                ha="center", fontsize=8.5, color=SECOND)
+for k, (xi, yi) in enumerate(zip(lb_x, lb_y)):
+    # Two pairs of submissions now sit close enough in x to overprint each other.
+    # Drop the label below the marker when its neighbour is within four experiments.
+    crowded = k and xi - lb_x[k - 1] < 4
+    ax.annotate(f"{yi:.5f}", (xi, yi), textcoords="offset points",
+                xytext=(0, -17 if crowded else 9), ha="center", fontsize=8.5,
+                color=SECOND)
 by_id = {r["id"]: r["cv_mean"] for r in led}
-ax.annotate("untuned anchor", (1, by_id[1]), textcoords="offset points", xytext=(10, 7),
-            fontsize=9, color=SECOND)
+ax.annotate("untuned anchor", (1, by_id[1]), textcoords="offset points",
+            xytext=(12, -13), fontsize=9, color=SECOND)
 ax.annotate("5-seed bagged blend", (15, by_id[15]), textcoords="offset points",
             xytext=(-6, -20), ha="right", fontsize=9, color=SECOND)
 ax.annotate("target encoding", (17, by_id[17]), textcoords="offset points",
             xytext=(4, -22), fontsize=9, color=SECOND)
+ax.annotate("XGBoost", (38, by_id[38]), textcoords="offset points",
+            xytext=(0, -21), ha="center", fontsize=9, color=SECOND)
+ax.annotate("the 29-member stack", (44, by_id[44]), textcoords="offset points",
+            xytext=(-4, 12), ha="right", fontsize=9, color=SECOND)
 ax.set_xlabel("experiment")
 ax.set_ylabel("ROC AUC")
-ax.set_xticks(x)
+ax.set_xticks([n for n in x if n % 4 == 0 or n == 1])
 ax.legend(frameon=False, loc="lower right", labelcolor=SECOND)
 finish(ax, "Every experiment in the ledger",
        "Fifteen experiments of model capacity and averaging, worth +0.0089 together.\n"
-       "Then one change of representation, worth +0.0029 on its own.")
+       "Then one change of representation, worth +0.0029, and three reopenings it\n"
+       "made possible worth +0.0006 more on top of the stack. The jagged tail\n"
+       "is three hyperparameter sweeps, every one of them null.")
 fig.tight_layout()
 fig.savefig(OUTDIR / "fig1_ledger.png", bbox_inches="tight")
 plt.close(fig)
