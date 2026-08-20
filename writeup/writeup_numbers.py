@@ -244,6 +244,13 @@ cat = {s_: np.load(OOF / f) for s_, f in [
     (13, "catboost_te_seed13_oof.npy")]}
 nte = np.load(OOF / "neural_te_oof.npy")
 
+xgb = {s_: np.load(OOF / f) for s_, f in [
+    (42, "xgb_te_oof.npy"),
+    (2024, "xgb_te_seed2024_oof.npy"),
+    (7, "xgb_te_seed7_oof.npy"),
+    (2025, "xgb_te_seed2025_oof.npy"),
+    (13, "xgb_te_seed13_oof.npy")]}
+
 cat_cv = {int(k): float(per_fold(v).mean()) for k, v in cat.items()}
 lgb_cv = {int(k.replace("te", "") or 42): v
           for k, v in res["target_encoding"]["seed_cv"].items()}
@@ -255,6 +262,13 @@ gap_se = float(np.sqrt(c_arr.var(ddof=1) / len(c_arr) + l_arr.var(ddof=1) / len(
 # Paired against the LightGBM it replaces, on identical folds.
 dc = per_fold(cat[42]) - te_folds
 dn = per_fold(nte) - per_fold(neural)
+
+xgb_cv = {int(k): float(per_fold(v).mean()) for k, v in xgb.items()}
+x_arr = np.array(sorted(xgb_cv.values()))
+xgap = float(x_arr.mean() - l_arr.mean())
+xgap_se = float(np.sqrt(x_arr.var(ddof=1) / len(x_arr)
+                        + l_arr.var(ddof=1) / len(l_arr)))
+dx = per_fold(xgb[42]) - te_folds
 
 res["reopenings"] = {
     "catboost": {
@@ -281,6 +295,18 @@ res["reopenings"] = {
         "spearman_vs_lgb_te": float(spearmanr(nte, tev["te42"]).statistic),
         "gap_to_best_gbdt": float(per_fold(nte).mean() - c_arr.max()),
     },
+    # The third reopening, 2026-08-19. Dropped in the 06 amendment as "a third
+    # histogram GBDT" and never run, on the raw features, in the same pre-encoding
+    # regime that produced the CatBoost rejection this writeup already overturns.
+    "xgboost": {
+        "seed_cv": xgb_cv,
+        "mean": float(x_arr.mean()), "sd": float(x_arr.std(ddof=1)),
+        "range": float(x_arr.max() - x_arr.min()),
+        "gap": xgap, "gap_se": xgap_se, "gap_in_se": xgap / xgap_se,
+        "gap_vs_catboost": float(x_arr.mean() - c_arr.mean()),
+        "paired_vs_lgb": {"gain": float(dx.mean()), "sd": float(dx.std(ddof=1)),
+                          "folds_won": int((dx > 0).sum())},
+    },
 }
 
 # The saturation curve. Every stack here is fit INSIDE the fold loop, which is the
@@ -291,17 +317,24 @@ stack_members = dict(members)
 for k, v in cat.items():
     stack_members[f"cat{k}"] = v
 stack_members["neural_te"] = nte
+for k, v in xgb.items():
+    stack_members[f"xgb{k}"] = v
 SN = list(stack_members)
 SL = np.column_stack([logit(stack_members[k]) for k in SN])
 
+BASE18 = [n for n in SN if not n.startswith(("cat", "xgb")) and n != "neural_te"]
+CATS = [f"cat{k}" for k in (42, 2024, 7, 2025, 13)]
+XGBS = [f"xgb{k}" for k in (42, 2024, 7, 2025, 13)]
+S23 = BASE18 + CATS
+S24 = S23 + ["neural_te"]
+
 SETS = [
-    ("18: five TE seeds, twelve raw, one neural", [n for n in SN
-                                                   if not n.startswith("cat")
-                                                   and n != "neural_te"]),
-    ("19: plus CatBoost", [n for n in SN if n in ("cat42",) or
-                           (not n.startswith("cat") and n != "neural_te")]),
-    ("23: plus four CatBoost seeds", [n for n in SN if n != "neural_te"]),
-    ("24: plus the encoded neural model", SN),
+    ("18: five TE seeds, twelve raw, one neural", BASE18),
+    ("19: plus CatBoost", BASE18 + ["cat42"]),
+    ("23: plus four CatBoost seeds", S23),
+    ("24: plus the encoded neural model", S24),
+    ("25: plus XGBoost", S24 + ["xgb42"]),
+    ("29: plus four XGBoost seeds", S24 + XGBS),
 ]
 
 
@@ -330,10 +363,20 @@ res["stack_curve"] = curve
 # The 24-member coefficients, which are the actual result of the second reopening:
 # the encoded neural model takes the largest weight in the stack and the WEAK one
 # does not collapse.
-f24 = LogisticRegression(C=1.0, max_iter=2000).fit(SL, y)
-res["stack24_coefs"] = sorted(
-    [{"name": n, "cv": float(per_fold(stack_members[n]).mean()), "coef": float(c)}
-     for n, c in zip(SN, f24.coef_[0])], key=lambda d: -d["coef"])
+def coefs_for(keep):
+    cols = [SN.index(n) for n in keep]
+    m = LogisticRegression(C=1.0, max_iter=2000).fit(SL[:, cols], y)
+    return sorted(
+        [{"name": n, "cv": float(per_fold(stack_members[n]).mean()), "coef": float(c)}
+         for n, c in zip(keep, m.coef_[0])], key=lambda d: -d["coef"])
+
+
+# Kept fitting the 24-member set explicitly. It used to fit all of SL, which meant
+# the same thing only while 24 was every member there was.
+res["stack24_coefs"] = coefs_for(S24)
+# The 29-member fit, where XGBoost takes the largest weight and pays for it out of
+# the five LightGBM target-encoded seeds rather than out of the stack as a whole.
+res["stack29_coefs"] = coefs_for(S24 + XGBS)
 
 # -------------------------------------------------------------- 7. ledger for CV/LB
 led = pd.read_csv(REPO / "experiments.csv")
@@ -381,3 +424,12 @@ for c in res["stack_curve"]:
     print(f"  stack {c['n']:>2}: {c['cv']:.6f}{st}")
 top = res["stack24_coefs"][0]
 print(f"  largest coefficient in the 24-member stack: {top['name']} {top['coef']:+.4f}")
+rx = res["reopenings"]["xgboost"]
+print(f"  xgboost TE: mean {rx['mean']:.6f}, gap vs lgbm {rx['gap']:+.6f} "
+      f"({rx['gap_in_se']:.1f} se), vs catboost {rx['gap_vs_catboost']:+.6f}, "
+      f"seed range {rx['range']:.2e}")
+t29 = res["stack29_coefs"][0]
+print(f"  largest coefficient in the 29-member stack: {t29['name']} {t29['coef']:+.4f}")
+te_now = sum(c["coef"] for c in res["stack29_coefs"] if c["name"].startswith("te"))
+te_was = sum(c["coef"] for c in res["stack24_coefs"] if c["name"].startswith("te"))
+print(f"  five TE seeds, summed coefficient: {te_was:+.4f} -> {te_now:+.4f}")
