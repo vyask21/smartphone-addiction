@@ -111,6 +111,10 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 59 | stack_30_top9 | 0.967968 | 0.000436 | 0.96929 |
 | 60 | stack_30_all66 | 0.967934 | 0.000427 | |
 | 61 | stack_31_both | 0.967967 | 0.000436 | |
+| 62 | xgb_depth4 | 0.966825 | 0.000481 | |
+| 63 | xgb_depth6 | 0.967099 | 0.000414 | |
+| 64 | xgb_depth8 | 0.966589 | 0.000400 | |
+| 65 | xgb_depth10 | 0.966301 | 0.000465 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -132,11 +136,12 @@ depth-6 tree already reaches every 2-way region, and encoding all 66 is worth
 Rows 26 to 54 are three reopenings and three null sweeps. CatBoost (26, 28 to 31) and
 XGBoost (38, 40 to 43) each came back as a family after a single seed looked
 promising, and the neural model (33) came back on the encoded features. All three
-paid. `num_leaves` (35 to 37), the encoder's smoothing constant (46 to 49) and the
-encoder's inner split count (50 to 54) were hyperparameters of components already
-fitted to that representation, and all three returned nothing. The rule those six
-points support is in `NOTES.md`, and it was written down after the fourth and
-correctly called the fifth and sixth in advance.
+paid. `num_leaves` (35 to 37), the encoder's smoothing constant (46 to 49), its inner
+split count (50 to 54) and XGBoost's `max_depth` (62 to 65) were hyperparameters of
+components already fitted to that representation, and all four returned nothing. The
+rule those seven points support is in `NOTES.md`. It was written down after the fourth
+and has correctly called every one since, including `max_depth`, where the notebook
+header argued at length that the rule did not apply.
 
 Rows 50 to 54 also close a gap rather than only adding a null: after them there is no
 constant in this pipeline that has never been varied.
