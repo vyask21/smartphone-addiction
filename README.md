@@ -99,6 +99,11 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 47 | xgb_smooth5 | 0.967116 | 0.000443 | |
 | 48 | xgb_smooth25 | 0.967037 | 0.000418 | |
 | 49 | xgb_smooth100 | 0.966880 | 0.000426 | |
+| 50 | xgb_inner2 | 0.966937 | 0.000435 | |
+| 51 | xgb_inner3 | 0.967016 | 0.000428 | |
+| 52 | xgb_inner5 | 0.967099 | 0.000414 | |
+| 53 | xgb_inner10 | 0.967107 | 0.000427 | |
+| 54 | xgb_inner20 | 0.967096 | 0.000444 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -110,13 +115,17 @@ which is the number to read: 0.967650, +0.000867 over row 17 on all five folds. 
 optimism in row 24 turned out to be 1.5e-05. Every stack row from 25 onward uses the
 fold-loop protocol, and every other row is a plain five-fold CV.
 
-Rows 26 to 49 are three reopenings and two null sweeps. CatBoost (26, 28 to 31) and
+Rows 26 to 54 are three reopenings and three null sweeps. CatBoost (26, 28 to 31) and
 XGBoost (38, 40 to 43) each came back as a family after a single seed looked
 promising, and the neural model (33) came back on the encoded features. All three
-paid. `num_leaves` (35 to 37) and the encoder's smoothing constant (46 to 49) were
-hyperparameters of components already fitted to that representation, and both returned
-nothing. The rule those five points support is in `NOTES.md` and it was written down
-before the last of them ran.
+paid. `num_leaves` (35 to 37), the encoder's smoothing constant (46 to 49) and the
+encoder's inner split count (50 to 54) were hyperparameters of components already
+fitted to that representation, and all three returned nothing. The rule those six
+points support is in `NOTES.md`, and it was written down after the fourth and
+correctly called the fifth and sixth in advance.
+
+Rows 50 to 54 also close a gap rather than only adding a null: after them there is no
+constant in this pipeline that has never been varied.
 
 Row 44 is the best row here on both axes, CV 0.967925 and public LB 0.96924, and it is
 a 29 member stack. Row 45 removes five of those members and costs four millionths,
