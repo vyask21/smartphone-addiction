@@ -75,6 +75,30 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 23 | lgbm_bag08_seed13_te | 0.966789 | 0.000427 | |
 | 24 | stack_logit_18 | 0.967665 | 0.000432 | 0.96897 |
 | 25 | stack_logit_18_oof | 0.967650 | 0.000437 | not submitted |
+| 26 | catboost_te | 0.966915 | 0.000435 | |
+| 27 | stack_logit_19_oof | 0.967750 | 0.000431 | not submitted |
+| 28 | catboost_te_seed2024 | 0.966928 | 0.000468 | |
+| 29 | catboost_te_seed7 | 0.966920 | 0.000424 | |
+| 30 | catboost_te_seed2025 | 0.966916 | 0.000431 | |
+| 31 | catboost_te_seed13 | 0.966922 | 0.000442 | |
+| 32 | stack_logit_23_oof | 0.967764 | 0.000434 | 0.96902 |
+| 33 | neural_te | 0.965373 | 0.000405 | in the stack, not submitted alone |
+| 34 | stack_logit_24_oof | 0.967807 | 0.000432 | not submitted |
+| 35 | te_leaves15 | 0.966016 | 0.000799 | |
+| 36 | te_leaves63 | 0.966758 | 0.000440 | |
+| 37 | te_leaves127 | 0.966596 | 0.000454 | |
+| 38 | xgb_te | 0.967099 | 0.000414 | |
+| 39 | stack_logit_25_oof | 0.967873 | 0.000424 | not submitted |
+| 40 | xgb_te_seed2024 | 0.967148 | 0.000432 | |
+| 41 | xgb_te_seed7 | 0.967132 | 0.000455 | |
+| 42 | xgb_te_seed2025 | 0.967099 | 0.000421 | |
+| 43 | xgb_te_seed13 | 0.967111 | 0.000446 | |
+| 44 | stack_logit_29_oof | 0.967925 | 0.000428 | 0.96924 |
+| 45 | stack_logit_24_pruned | 0.967929 | 0.000429 | discarded, not submitted |
+| 46 | xgb_smooth1 | 0.967122 | 0.000440 | |
+| 47 | xgb_smooth5 | 0.967116 | 0.000443 | |
+| 48 | xgb_smooth25 | 0.967037 | 0.000418 | |
+| 49 | xgb_smooth100 | 0.966880 | 0.000426 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -83,7 +107,24 @@ read a difference at the fourth decimal between them. See `NOTES.md`.
 Row 24's CV is a stacker fitted and scored on the same out-of-fold matrix, so it reads
 optimistically. Row 25 is the same stack with the combiner fit inside the fold loop,
 which is the number to read: 0.967650, +0.000867 over row 17 on all five folds. The
-optimism in row 24 turned out to be 1.5e-05. Every other row is a plain five-fold CV.
+optimism in row 24 turned out to be 1.5e-05. Every stack row from 25 onward uses the
+fold-loop protocol, and every other row is a plain five-fold CV.
+
+Rows 26 to 49 are three reopenings and two null sweeps. CatBoost (26, 28 to 31) and
+XGBoost (38, 40 to 43) each came back as a family after a single seed looked
+promising, and the neural model (33) came back on the encoded features. All three
+paid. `num_leaves` (35 to 37) and the encoder's smoothing constant (46 to 49) were
+hyperparameters of components already fitted to that representation, and both returned
+nothing. The rule those five points support is in `NOTES.md` and it was written down
+before the last of them ran.
+
+Row 44 is the best row here on both axes, CV 0.967925 and public LB 0.96924, and it is
+a 29 member stack. Row 45 removes five of those members and costs four millionths,
+which is a result about what the stack was already ignoring rather than a better model.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
+
+This table is generated from `experiments.csv` by `writeup/readme_table.py`. It is not
+maintained by hand, because between 2026-08-11 and 2026-08-20 the hand-maintained
+version fell 24 rows behind the file it was copying.
