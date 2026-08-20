@@ -104,6 +104,9 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 52 | xgb_inner5 | 0.967099 | 0.000414 | |
 | 53 | xgb_inner10 | 0.967107 | 0.000427 | |
 | 54 | xgb_inner20 | 0.967096 | 0.000444 | |
+| 55 | xgb_pair_base | 0.967099 | 0.000414 | |
+| 56 | xgb_pair_top9 | 0.967176 | 0.000475 | |
+| 57 | xgb_pair_all66 | 0.966589 | 0.000446 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -114,6 +117,13 @@ optimistically. Row 25 is the same stack with the combiner fit inside the fold l
 which is the number to read: 0.967650, +0.000867 over row 17 on all five folds. The
 optimism in row 24 turned out to be 1.5e-05. Every stack row from 25 onward uses the
 fold-loop protocol, and every other row is a plain five-fold CV.
+
+Rows 55 to 57 are the one idea that reopened the feature set. `31` refuted the
+"no interactions to discover" claim that had feature engineering closed since
+2026-08-11: nine of the 66 column pairs carry real non-additive signal against a
+control centred on zero. Encoding those pairs is still worth nothing, because a
+depth-6 tree already reaches every 2-way region, and encoding all 66 is worth
+-0.000509 through plain dilution. Real effect, no value, which is row 19 again.
 
 Rows 26 to 54 are three reopenings and three null sweeps. CatBoost (26, 28 to 31) and
 XGBoost (38, 40 to 43) each came back as a family after a single seed looked
