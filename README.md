@@ -115,6 +115,18 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 63 | xgb_depth6 | 0.967099 | 0.000414 | |
 | 64 | xgb_depth8 | 0.966589 | 0.000400 | |
 | 65 | xgb_depth10 | 0.966301 | 0.000465 | |
+| 66 | cat_native_c1 | 0.958943 | 0.000504 | |
+| 67 | cat_native_c2 | 0.961358 | 0.000536 | |
+| 68 | lgb_raw | 0.963464 | 0.000586 | |
+| 69 | xgb_raw | 0.964218 | 0.000497 | |
+| 70 | cat_raw | 0.961420 | 0.000482 | |
+| 71 | stack_30_row59_refit | 0.967968 | 0.000436 | |
+| 72 | stack_31_cat_nat_c1 | 0.967987 | 0.000425 | |
+| 73 | stack_31_cat_nat_c2 | 0.967970 | 0.000439 | |
+| 74 | stack_31_lgb_raw | 0.967967 | 0.000436 | |
+| 75 | stack_31_xgb_raw | 0.967990 | 0.000430 | |
+| 76 | stack_31_cat_raw | 0.967975 | 0.000441 | |
+| 77 | stack_35_all5 | 0.968110 | 0.000432 | 0.96941 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -146,11 +158,16 @@ header argued at length that the rule did not apply.
 Rows 50 to 54 also close a gap rather than only adding a null: after them there is no
 constant in this pipeline that has never been varied.
 
-Row 59 is the best row here on both axes, CV 0.967968 and public LB 0.96929, and it is
-a 30 member stack: row 44's 29 plus one pair-encoded XGBoost. That member is a null as a
-model, rows 55 to 57, and takes the second largest weight in the stack. Row 45 removes
-five members from row 44 and costs four millionths, which is a result about what the
-stack was already ignoring rather than a better model.
+Row 77 is the best row here on both axes, CV 0.968110 and public LB 0.96941, and it is
+a 35 member stack: row 59's 30 plus five views that drop the target encoder or replace it
+with CatBoost's own. Read rows 72 to 76 next to it, because they are the point. Each of
+those five adds one of the new members on its own and **not one of them clears the gate**;
+added together the five are worth 2.9 times the sum of what they are worth apart. The two
+largest coefficients in the finished stack, one positive and one negative, belong to its
+two weakest models, so what the combiner bought is a contrast rather than either model.
+
+Row 45 removes five members from row 44 and costs four millionths, which is a result about
+what the stack was already ignoring rather than a better model.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
