@@ -45,3 +45,4 @@ kaggle/*/30_inner_splits.ipynb
 kaggle/*/32_pair_encoding.ipynb
 kaggle/*/34_xgb_depth.ipynb
 kaggle/*/35_native_catboost.ipynb
+kaggle/*/36_no_encoder_views.ipynb
