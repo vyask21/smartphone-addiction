@@ -157,6 +157,8 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 105 | xgb_bin3072 | 0.968014 | 0.000397 | |
 | 106 | neural_fixed | 0.965402 | 0.000387 | |
 | 107 | neural_lookup | 0.961181 | 0.000319 | |
+| 108 | lgb_te_fe | 0.967212 | 0.001382 | |
+| 109 | cat_te_fe | 0.968036 | 0.000432 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
