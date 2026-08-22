@@ -150,6 +150,11 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 98 | stack_36_lgb_raw_fe | 0.968376 | 0.000419 | |
 | 99 | stack_36_cat_te_n4000 | 0.968122 | 0.000435 | |
 | 100 | stack_36_cat_raw_n10k | 0.968130 | 0.000432 | |
+| 101 | xgb_bin256 | 0.968005 | 0.000418 | |
+| 102 | xgb_bin512 | 0.968033 | 0.000422 | |
+| 103 | xgb_bin1024 | 0.968040 | 0.000419 | |
+| 104 | xgb_bin1536 | 0.968054 | 0.000409 | |
+| 105 | xgb_bin3072 | 0.968014 | 0.000397 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
