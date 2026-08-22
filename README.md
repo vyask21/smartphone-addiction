@@ -127,6 +127,29 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 75 | stack_31_xgb_raw | 0.967990 | 0.000430 | |
 | 76 | stack_31_cat_raw | 0.967975 | 0.000441 | |
 | 77 | stack_35_all5 | 0.968110 | 0.000432 | 0.96941 |
+| 78 | cat_raw_n2000 | 0.961420 | 0.000482 | |
+| 79 | cat_raw_n3000 | 0.962736 | 0.000494 | |
+| 80 | cat_raw_n4000 | 0.963343 | 0.000479 | |
+| 81 | cat_raw_n6000 | 0.963854 | 0.000500 | |
+| 82 | cat_raw_n8000 | 0.964003 | 0.000481 | |
+| 83 | cat_raw_n10000 | 0.964042 | 0.000476 | |
+| 84 | cat_raw_n12000 | 0.964020 | 0.000476 | |
+| 85 | cat_te_n2000 | 0.966915 | 0.000435 | |
+| 86 | cat_te_n3000 | 0.967101 | 0.000441 | |
+| 87 | cat_te_n4000 | 0.967166 | 0.000445 | |
+| 88 | cat_te_n6000 | 0.967158 | 0.000454 | |
+| 89 | cat_te_n8000 | 0.967069 | 0.000463 | |
+| 90 | lgb_raw_fe | 0.963821 | 0.000596 | |
+| 91 | xgb_raw_fe | 0.964666 | 0.000486 | |
+| 92 | cat_raw_fe | 0.962181 | 0.000546 | |
+| 93 | xgb_te_fe | 0.968005 | 0.000418 | |
+| 94 | stack_41_all6 | 0.968713 | 0.000407 | 0.97003 |
+| 95 | stack_36_xgb_te_fe | 0.968534 | 0.000420 | |
+| 96 | stack_36_xgb_raw_fe | 0.968562 | 0.000400 | |
+| 97 | stack_36_cat_raw_fe | 0.968484 | 0.000428 | |
+| 98 | stack_36_lgb_raw_fe | 0.968376 | 0.000419 | |
+| 99 | stack_36_cat_te_n4000 | 0.968122 | 0.000435 | |
+| 100 | stack_36_cat_raw_n10k | 0.968130 | 0.000432 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -158,13 +181,14 @@ header argued at length that the rule did not apply.
 Rows 50 to 54 also close a gap rather than only adding a null: after them there is no
 constant in this pipeline that has never been varied.
 
-Row 77 is the best row here on both axes, CV 0.968110 and public LB 0.96941, and it is
-a 35 member stack: row 59's 30 plus five views that drop the target encoder or replace it
-with CatBoost's own. Read rows 72 to 76 next to it, because they are the point. Each of
-those five adds one of the new members on its own and **not one of them clears the gate**;
-added together the five are worth 2.9 times the sum of what they are worth apart. The two
-largest coefficients in the finished stack, one positive and one negative, belong to its
-two weakest models, so what the combiner bought is a contrast rather than either model.
+Row 94 is the best row here on both axes, CV 0.968713 and public LB 0.97003, and it is
+a 41 member stack. Read rows 95 to 100 beside it, because the interesting part is that they
+disagree with the previous gate. In row 77 no single candidate cleared the bar and the set
+beat the sum of its parts by 2.9x. Here five of six clear it alone and the set is worth only
+0.39x the sum, because four of the six carry the same new information and compete for the
+same weight. Whether adding members together helps more or less than adding them one at a
+time depends on whether they are diverse in the same direction, and it cannot be assumed
+either way.
 
 Row 45 removes five members from row 44 and costs four millionths, which is a result about
 what the stack was already ignoring rather than a better model.
