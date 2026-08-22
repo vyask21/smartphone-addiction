@@ -159,6 +159,19 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 107 | neural_lookup | 0.961181 | 0.000319 | |
 | 108 | lgb_te_fe | 0.967212 | 0.001382 | |
 | 109 | cat_te_fe | 0.968036 | 0.000432 | |
+| 110 | logit_te_fe | 0.954249 | 0.000541 | |
+| 111 | hgb_te_fe | 0.967885 | 0.000426 | |
+| 112 | et_te_fe | 0.959538 | 0.000619 | |
+| 113 | rf_te_fe | 0.962430 | 0.000590 | |
+| 114 | stack_40_row94_nodup | 0.968712 | 0.000407 | |
+| 115 | stack_41_cat_te_fe | 0.968741 | 0.000409 | |
+| 116 | stack_41_hgb_te_fe | 0.968728 | 0.000408 | |
+| 117 | stack_41_lgb_te_fe | 0.968706 | 0.000432 | |
+| 118 | stack_41_rf_te_fe | 0.968714 | 0.000407 | |
+| 119 | stack_41_neural_lookup | 0.968790 | 0.000409 | |
+| 120 | stack_41_et_te_fe | 0.968716 | 0.000408 | |
+| 121 | stack_41_logit_te_fe | 0.968714 | 0.000407 | |
+| 122 | stack_47_all7 | 0.968824 | 0.000418 | 0.97013 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
