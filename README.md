@@ -190,6 +190,8 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 138 | realmlp10 | 0.967892 | 0.000411 | |
 | 139 | stack_53_realmlp10 | 0.968932 | 0.000408 | |
 | 140 | stack_prune25_v2 | 0.968944 | 0.000401 | 0.97021 |
+| 141 | realmlp_raw_fe | 0.952357 | 0.000663 | |
+| 142 | stack_54_realmlp_raw_fe | 0.968933 | 0.000406 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -221,8 +223,8 @@ header argued at length that the rule did not apply.
 Rows 50 to 54 also close a gap rather than only adding a null: after them there is no
 constant in this pipeline that has never been varied.
 
-Row 94 is the best row here on both axes, CV 0.968713 and public LB 0.97003, and it is
-a 41 member stack. Read rows 95 to 100 beside it, because the interesting part is that they
+Row 94 was the best row on both axes when it ran, CV 0.968713 and public LB 0.97003, a
+41 member stack. Read rows 95 to 100 beside it, because the interesting part is that they
 disagree with the previous gate. In row 77 no single candidate cleared the bar and the set
 beat the sum of its parts by 2.9x. Here five of six clear it alone and the set is worth only
 0.39x the sum, because four of the six carry the same new information and compete for the
@@ -232,6 +234,27 @@ either way.
 
 Row 45 removes five members from row 44 and costs four millionths, which is a result about
 what the stack was already ignoring rather than a better model.
+
+Rows 101 to 142 are the saturation curve, and they are the most useful stretch of this
+table to read as a sequence rather than row by row. Nine membership gates were run in
+total. The last six returned +0.000112, +0.000021, +0.000005, +0.000083, +0.000023 and
++0.000000, falling by roughly a factor of five each step. Exactly one broke the pattern,
+row 137, and the thing that broke it was RealMLP, an architecture class the stack had
+never contained. A better version of something already in the stack never did.
+
+Row 140 is the best row here on both axes, CV 0.968944 and public LB 0.97021. It is a
+25 member prune of a 53 member stack, and the prune is worth +0.000013 over keeping all
+53, which is a statement about how much of the stack was already dead weight.
+
+Rows 141 and 142 are the last gate and they close the board. RealMLP with the target
+encoder switched off scores 0.952357, which is 0.015536 behind its encoded twin at 0 of
+5 folds, and it then contributes exactly +0.000000 to the stack and is pruned out of the
+top 25 entirely. The finding is worth more than the null. Removing the encoder costs a
+boosted tree between 0.0033 and 0.0059 and costs this network 0.0155, so the encoder's
+value is a property of the architecture rather than of the representation. A tree can
+split a raw column directly and recover an ordering of its levels for itself. A network
+has no such move, and the periodic embedding is a smooth basis over the value axis
+rather than a lookup over levels.
 
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
