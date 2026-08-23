@@ -176,6 +176,14 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 124 | xgb_tuned | 0.968222 | 0.000420 | |
 | 125 | stack_47_row122_refit | 0.968824 | 0.000418 | |
 | 126 | stack_48_xgb_tuned | 0.968845 | 0.000415 | 0.97014 |
+| 127 | neural_fe | 0.965798 | 0.000345 | |
+| 128 | neural_wide | 0.965432 | 0.000375 | |
+| 129 | neural_res | 0.964007 | 0.000334 | |
+| 130 | stack_48_row126_refit | 0.968845 | 0.000415 | |
+| 131 | stack_49_neural_fe | 0.968845 | 0.000414 | |
+| 132 | stack_49_neural_wide | 0.968844 | 0.000416 | |
+| 133 | stack_49_neural_res | 0.968849 | 0.000412 | |
+| 134 | stack_51_all3 | 0.968850 | 0.000410 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
