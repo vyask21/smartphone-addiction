@@ -192,6 +192,8 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 140 | stack_prune25_v2 | 0.968944 | 0.000401 | 0.97021 |
 | 141 | realmlp_raw_fe | 0.952357 | 0.000663 | |
 | 142 | stack_54_realmlp_raw_fe | 0.968933 | 0.000406 | |
+| 143 | tabm | 0.966931 | 0.000455 | |
+| 144 | stack_55_tabm | 0.968941 | 0.000408 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
