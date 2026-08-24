@@ -1,0 +1,290 @@
+{
+ "encoder_by_class": [
+  {
+   "family": "LightGBM",
+   "encoder_on": "lgb_te_fe",
+   "encoder_off": "lgb_raw_fe",
+   "cv_on": 0.9672117864107085,
+   "cv_off": 0.9638205109969794,
+   "cost": -0.003391275413729078
+  },
+  {
+   "family": "XGBoost",
+   "encoder_on": "xgb_te_fe",
+   "encoder_off": "xgb_raw_fe",
+   "cv_on": 0.9680046902785392,
+   "cv_off": 0.9646656121061646,
+   "cost": -0.0033390781723745544
+  },
+  {
+   "family": "CatBoost",
+   "encoder_on": "cat_te_fe",
+   "encoder_off": "cat_raw_fe",
+   "cv_on": 0.9680355850060615,
+   "cv_off": 0.9621808245060265,
+   "cost": -0.005854760500034972
+  },
+  {
+   "family": "RealMLP",
+   "encoder_on": "realmlp10",
+   "encoder_off": "realmlp_raw_fe",
+   "cv_on": 0.967892307760587,
+   "cv_off": 0.9523567727393987,
+   "cost": -0.015535535021188318
+  }
+ ],
+ "encoder_summary": {
+  "tree_cost_min": -0.0033390781723745544,
+  "tree_cost_max": -0.005854760500034972,
+  "net_cost": -0.015535535021188318,
+  "ratio_vs_worst_tree": 2.65348770818132,
+  "ratio_vs_best_tree": 4.652641902702256
+ },
+ "mechanism_claims": [
+  {
+   "claim": "CatBoost's ordered target statistics differ from histogram splits",
+   "pair": [
+    "catboost_te",
+    "xgb_te"
+   ],
+   "rho": 0.988665044078993
+  },
+  {
+   "claim": "a linear model among gradient boosted trees",
+   "pair": [
+    "logit_te_fe",
+    "xgb_te"
+   ],
+   "rho": 0.9226647252729326
+  },
+  {
+   "claim": "TabM trains its members jointly, RealMLP averages independent ones",
+   "pair": [
+    "tabm",
+    "realmlp10"
+   ],
+   "rho": 0.9916145564321749
+  }
+ ],
+ "rho_scale": {
+  "two_seeds_one_model": 0.9973441227619063,
+  "within_family_lo": 0.9741,
+  "within_family_hi": 0.9981
+ },
+ "saturation_curve": [
+  {
+   "gate": "row 77",
+   "offered": "five no-encoder and native views",
+   "gain": 0.00014199999999997548,
+   "base": "59",
+   "cv": 0.96811
+  },
+  {
+   "gate": "row 94",
+   "offered": "six ratio-block and fitted-budget members",
+   "gain": 0.0006030000000000202,
+   "base": "77",
+   "cv": 0.968713
+  },
+  {
+   "gate": "row 122",
+   "offered": "seven members, four new families",
+   "gain": 0.00011099999999997223,
+   "base": "94",
+   "cv": 0.968824
+  },
+  {
+   "gate": "row 126",
+   "offered": "the best single model in the repo",
+   "gain": 2.0999999999937735e-05,
+   "base": "122",
+   "cv": 0.968845
+  },
+  {
+   "gate": "row 134",
+   "offered": "three neural variants",
+   "gain": 5.000000000032756e-06,
+   "base": "126",
+   "cv": 0.96885
+  },
+  {
+   "gate": "row 136",
+   "offered": "RealMLP, a new architecture class",
+   "gain": 7.199999999996098e-05,
+   "base": "134",
+   "cv": 0.968922
+  },
+  {
+   "gate": "row 139",
+   "offered": "RealMLP at ten internal members",
+   "gain": 1.0000000000065512e-05,
+   "base": "136",
+   "cv": 0.968932
+  },
+  {
+   "gate": "row 142",
+   "offered": "RealMLP with the encoder off",
+   "gain": 1.0000000000287557e-06,
+   "base": "139",
+   "cv": 0.968933
+  },
+  {
+   "gate": "row 144",
+   "offered": "TabM, a second new architecture class",
+   "gain": 8.000000000008e-06,
+   "base": "142",
+   "cv": 0.968941
+  }
+ ],
+ "prunes": [
+  {
+   "row": "row 137",
+   "against": "134",
+   "what": "the row 136 gate plus a 25-member prune",
+   "gain": 8.20000000000265e-05
+  },
+  {
+   "row": "row 140",
+   "against": "136",
+   "what": "the row 139 gate plus a 25-member prune",
+   "gain": 2.2000000000077513e-05
+  }
+ ],
+ "rank_table": {
+  "teams": 2666,
+  "our_score": 0.97021,
+  "our_rank": 527,
+  "top": 0.97152,
+  "at": [
+   {
+    "rank": 1,
+    "score": 0.97152
+   },
+   {
+    "rank": 10,
+    "score": 0.9713
+   },
+   {
+    "rank": 100,
+    "score": 0.97117
+   },
+   {
+    "rank": 250,
+    "score": 0.97103
+   },
+   {
+    "rank": 500,
+    "score": 0.9704
+   }
+  ],
+  "rows": [
+   {
+    "gain": 2e-05,
+    "score": 0.97023,
+    "rank": 523,
+    "places": 4
+   },
+   {
+    "gain": 5e-05,
+    "score": 0.97026,
+    "rank": 518,
+    "places": 9
+   },
+   {
+    "gain": 0.0001,
+    "score": 0.97031,
+    "rank": 512,
+    "places": 15
+   },
+   {
+    "gain": 0.0002,
+    "score": 0.97041,
+    "rank": 498,
+    "places": 29
+   },
+   {
+    "gain": 0.0005,
+    "score": 0.97071,
+    "rank": 430,
+    "places": 97
+   },
+   {
+    "gain": 0.0008,
+    "score": 0.97101,
+    "rank": 255,
+    "places": 272
+   },
+   {
+    "gain": 0.0011,
+    "score": 0.97131,
+    "rank": 8,
+    "places": 519
+   }
+  ],
+  "band_top100": 0.0003500000000000725
+ },
+ "neural_line": [
+  {
+   "name": "neural",
+   "cv": 0.9391689164198243
+  },
+  {
+   "name": "neural_te",
+   "cv": 0.9653730310336984
+  },
+  {
+   "name": "neural_fe",
+   "cv": 0.9657975160667197
+  },
+  {
+   "name": "neural_wide",
+   "cv": 0.9654317398970946
+  },
+  {
+   "name": "neural_res",
+   "cv": 0.9640066965427598
+  },
+  {
+   "name": "neural_lookup",
+   "cv": 0.9611812475173263
+  },
+  {
+   "name": "realmlp",
+   "cv": 0.9677278339767685
+  },
+  {
+   "name": "realmlp10",
+   "cv": 0.967892307760587
+  },
+  {
+   "name": "realmlp_raw_fe",
+   "cv": 0.9523567727393987
+  },
+  {
+   "name": "tabm",
+   "cv": 0.9669306674422801
+  }
+ ],
+ "best_singles": [
+  {
+   "name": "xgb_tuned",
+   "cv": 0.9682219326166862
+  },
+  {
+   "name": "cat_te_fe",
+   "cv": 0.9680355850060615
+  },
+  {
+   "name": "realmlp10",
+   "cv": 0.967892307760587
+  },
+  {
+   "name": "tabm",
+   "cv": 0.9669306674422801
+  },
+  {
+   "name": "xgb_te_fe",
+   "cv": 0.9680046902785392
+  }
+ ]
+}
