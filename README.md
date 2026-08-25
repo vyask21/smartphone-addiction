@@ -206,7 +206,7 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 155 | stack_180_extbase5 | 0.969930 | 0.000383 | |
 | 156 | combiner_protocol_fulltest | 0.969962 | 0.000379 | 0.97103 |
 | 157 | blend_lookup_w15 | 0.969989 |  | 0.97103 |
-| 158 | greedy_blend_rejected | 0.970068 |  | 0.97006 |
+| 158 | greedy_blend_rejected | 0.970068 |  | 0.97106 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
