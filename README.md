@@ -201,6 +201,8 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 149 | stack_prune85_extlib7 | 0.969778 | 0.000387 | |
 | 150 | combiner_hillclimb | 0.969474 | 0.000400 | 0.97055 |
 | 151 | stack_prune65_extlib22 | 0.969891 | 0.000396 | 0.97103 |
+| 153 | stack_prune65_last | 0.969962 | 0.000379 | 0.97103 |
+| 154 | prune_sweep_and_bolt_reject | 0.969965 | 0.000379 | |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
