@@ -113,3 +113,33 @@ if thr is not None:
         print(f"  {folder}: {ok}/{len(rows)} above threshold")
         for n, s in rows:
             print(f"     {n:16} {s:.5f}  {'ok' if s > thr else 'FAIL'}")
+
+
+# ---------------------------------------------------------------------------------
+# SECOND METHOD, ALSO FAILED: the fold-congruence profile test.
+#
+# Published by srcJ in "S6E8 My Best CV Model Scored Worse on the LB", section 7.
+# The reasoning: fold 3 is intrinsically easier than fold 0 for every honest member, so
+# the shape of the centred per-fold AUC vector should be shared across the pool. A member
+# trained on a foreign split averages five of its models into each of our folds and was
+# expected to wash that shape out.
+#
+# srcJ states the caveat honestly, that a low score "flags an unusual or shaky member,
+# NOT a foreign CV scheme". They had no known-foreign members to calibrate against. We do,
+# and the result is worse than inconclusive.
+#
+#   verified members      +0.6842 to +0.9859   (srcK_g, PROVEN congruent, scores +0.6842)
+#   lookup_srcA, FOREIGN            +0.9902
+#   spline_srcD, FOREIGN             +0.9771
+#
+# Both proven-foreign members score ABOVE the median verified member and near the top of
+# the range. The statistic is anti-predictive here, not merely weak.
+#
+# Why the reasoning fails: fold difficulty is a property of WHICH ROWS are in the fold, so
+# a foreign-split member reproduces it fine. Its OOF is still out-of-fold per row. What a
+# foreign member loses is the fold-to-fold MODEL variation on top of that shape, which is
+# second order and is swamped by the intrinsic difficulty signal.
+#
+# Conclusion carried into the ledger: there is no known indirect test for a foreign fold
+# partition. Verification requires the author's own per-fold numbers, from a kernel log,
+# a metrics csv, a manifest, or published fold ids. Anything else is a claim.
