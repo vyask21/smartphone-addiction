@@ -86,6 +86,32 @@ for nm, o, t in [
     if a.shape == (len(train),) and b.shape == (len(test),):
         CAND[nm] = (a, b)
 
+# srcB's five base members. Row 155 offered them as stack MEMBERS and they returned
+# -0.000000, so they are not in the stack and are available as blend partners.
+NJ = ROOT / "artifacts" / "srcB_oof"
+for _k in ("01", "02", "03", "04", "05"):
+    _op, _tp = NJ / f"{_k}_oof_predictions.csv", NJ / f"{_k}_submission.csv"
+    if _op.exists() and _tp.exists():
+        _do, _dt = pd.read_csv(_op), pd.read_csv(_tp)
+        if (_do["id"].to_numpy() == train["id"].to_numpy()).all() and \
+           (_dt["id"].to_numpy() == test["id"].to_numpy()).all():
+            _oc = [c for c in _do.columns if c.lower() != "id"][0]
+            _tc = [c for c in _dt.columns if c.lower() != "id"][0]
+            CAND[f"srcB{_k}"] = (_do[_oc].to_numpy(float), _dt[_tc].to_numpy(float))
+
+# srcL's 50 weakest, solo AUC 0.9169 to 0.9568, all his own models on the
+# frozen partition. Far below the field, so row 142's bound says they are worthless as
+# MEMBERS; as partners at small weight the 5-of-5-fold guard decides.
+WK = ROOT / "artifacts" / "weak50"
+if (WK / "oof.npy").exists():
+    _wo, _wt = np.load(WK / "oof.npy"), np.load(WK / "test.npy")
+    _ids = pd.read_csv(WK / "members.csv")["id"].tolist()
+    assert _wo.shape == (len(train), len(_ids)) and _wt.shape == (len(test), len(_ids)), \
+        f"weak50 shapes {_wo.shape} {_wt.shape}"
+    for _j, _id in enumerate(_ids):
+        CAND[f"weak_{_id}"] = (_wo[:, _j].astype(float), _wt[:, _j].astype(float))
+    del _wo, _wt
+
 BOLT = ROOT / "artifacts" / "bolt"
 if (BOLT / "oof_predictions.parquet").exists():
     bo = pd.read_parquet(BOLT / "oof_predictions.parquet")
@@ -104,14 +130,15 @@ print("strongest five: " + ", ".join(
     f"{k} {solo[k]:.5f}" for k in sorted(solo, key=solo.get, reverse=True)[:5]) + "\n")
 
 # ---- greedy, with the 5/5-fold requirement ----------------------------------------
-GRID = (0.03, 0.06, 0.10, 0.15, 0.20)
-FLOOR = 1e-5
+GRID = (0.02, 0.04, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25)
+FLOOR = 3e-6
 picked = []
-for step in range(12):
+for step in range(25):
     best = None
     for k, (ro, rt) in RANKED.items():
-        if k in [p[0] for p in picked]:
-            continue
+        # WITH replacement: a candidate may be picked again at a further weight, which
+        # is how greedy ensemble selection is normally run. The 5-of-5-fold guard still
+        # applies to every pick.
         for w in GRID:
             cand = (1 - w) * cur_oof + w * ro
             per = fold_aucs(cand)
@@ -137,6 +164,6 @@ print(f"picked: {picked}")
 if picked:
     sub = pd.DataFrame({"id": test["id"].to_numpy(),
                         "addicted_label": (np.argsort(np.argsort(cur_tst)) + 0.5) / len(cur_tst)})
-    out = ROOT / "submissions" / "stack_greedy_blend.csv"
+    out = ROOT / "submissions" / "stack_greedy_blend3.csv"
     sub.to_csv(out, index=False)
     print(f"wrote {out.name}")
