@@ -210,6 +210,7 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 159 | greedy_blend_pool105 | 0.970084 |  | 0.97107 |
 | 160 | greedy_blend_pool294 | 0.970076 |  | |
 | 161 | joint_blend_weights | 0.970086 |  | |
+| 162 | family_mean_public_fusion |  |  | 0.97127 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
