@@ -130,7 +130,17 @@ for root, mem in clusters.items():
     print(f"  {ks[root][:52]}{tag}")
 
 draws = np.array([M[mem].mean(axis=0) for mem in clusters.values()])
+
+# Mean and median across the independent draws. The median is the more robust estimator
+# when one draw may be an outlier, and one of these four publishes no leaderboard score
+# at all. Both are a-priori choices; neither is tuned against our own submissions.
 fam = R(draws.mean(axis=0))
+fam_med = R(np.median(draws, axis=0))
+print(f"mean vs median across draws, spearman {np.corrcoef(fam, fam_med)[0, 1]:.6f}")
+pd.DataFrame({"id": ids,
+              "addicted_label": (np.argsort(np.argsort(fam_med)) + 0.5) / N}
+             ).to_csv(ROOT / "submissions" / "family_median.csv", index=False)
+print("wrote family_median.csv")
 out = pd.DataFrame({"id": ids,
                     "addicted_label": (np.argsort(np.argsort(fam)) + 0.5) / N})
 assert len(out) == N and np.isfinite(out["addicted_label"]).all()

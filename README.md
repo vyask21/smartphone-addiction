@@ -213,6 +213,7 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 162 | family_mean_public_fusion |  |  | 0.97127 |
 | 163 | family_mean_v2_alldraws |  |  | 0.97123 |
 | 164 | family_mean_v3_plateau_gated |  |  | 0.97128 |
+| 165 | family_median_and_source_sweep |  |  | 0.97128 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
