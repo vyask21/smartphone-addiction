@@ -115,6 +115,34 @@ if (WK / "oof.npy").exists():
 # beicicc. THE ONLY SOURCE IN THIS COMPETITION THAT PUBLISHES ITS FOLD IDS, so its
 # partition is verified DIRECTLY rather than inferred from printed per-fold AUCs. Their
 # labels run 1..5 against our 0..4 and all five folds match as exact row sets.
+# srcB's BLEND out-of-fold vectors, 07 through 19. Excluded from stack membership
+# under the standing no-blends rule, but admissible as blend PARTNERS, and unlike the
+# fusion submissions these ship an OOF so a weight can be chosen honestly rather than
+# guessed at on the leaderboard. 19_blend is 0.970099 out of fold, ABOVE our own stack.
+#
+# CAVEAT carried into the ledger: a blend's OOF is optimistic if its own weights were
+# fitted in-sample on that same OOF, which is what row 24 of this ledger measured about
+# our own first stacker. The realised offset on submission is the check.
+NJB = ROOT / "artifacts" / "srcB_oof"
+for _op in sorted(NJB.glob("*_blend_oof_predictions.csv")):
+    # 19_blend ships as "19_blend_submission.csv.csv", a doubled extension in the
+    # published dataset. The first run of this file silently skipped it, which dropped
+    # the STRONGEST blend in the library (OOF 0.970099, above our own stack). Both
+    # spellings are tried rather than assuming the tidy one.
+    _cands = [NJB / _op.name.replace("_oof_predictions", "_submission"),
+              NJB / (_op.name.replace("_oof_predictions", "_submission") + ".csv")]
+    _tp = next((c for c in _cands if c.exists()), None)
+    if _tp is None:
+        print(f"  no submission file for {_op.name}")
+        continue
+    _do, _dt = pd.read_csv(_op), pd.read_csv(_tp)
+    if not ((_do["id"].to_numpy() == train["id"].to_numpy()).all()
+            and (_dt["id"].to_numpy() == test["id"].to_numpy()).all()):
+        continue
+    _oc = [c for c in _do.columns if c.lower() != "id"][0]
+    _tc = [c for c in _dt.columns if c.lower() != "id"][0]
+    CAND[f"njb_{_op.name[:2]}"] = (_do[_oc].to_numpy(float), _dt[_tc].to_numpy(float))
+
 BE = ROOT / "artifacts" / "beicicc"
 if (BE / "fold_id.npy").exists():
     _fid = np.load(BE / "fold_id.npy")
@@ -235,6 +263,6 @@ print(f"picked: {picked}")
 if picked:
     sub = pd.DataFrame({"id": test["id"].to_numpy(),
                         "addicted_label": (np.argsort(np.argsort(cur_tst)) + 0.5) / len(cur_tst)})
-    out = ROOT / "submissions" / "stack_greedy_blend5.csv"
+    out = ROOT / "submissions" / "stack_greedy_srcB_blend.csv"
     sub.to_csv(out, index=False)
     print(f"wrote {out.name}")
