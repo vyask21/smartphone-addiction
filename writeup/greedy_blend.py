@@ -263,6 +263,6 @@ print(f"picked: {picked}")
 if picked:
     sub = pd.DataFrame({"id": test["id"].to_numpy(),
                         "addicted_label": (np.argsort(np.argsort(cur_tst)) + 0.5) / len(cur_tst)})
-    out = ROOT / "submissions" / "stack_greedy_srcB_blend.csv"
+    out = ROOT / "submissions" / "stack_greedy_extblend.csv"
     sub.to_csv(out, index=False)
     print(f"wrote {out.name}")
