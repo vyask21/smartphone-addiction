@@ -15,8 +15,110 @@ One paragraph, written at the end: what was built, what it scored, where it plac
 
 ## Approach
 
-What the validation scheme was and why, the features that mattered, the model, and
-the one or two decisions that made the difference. Written at the end.
+### Validation
+
+Five-fold `StratifiedKFold`, `shuffle=True`, `random_state=42`, over `train.csv` in its
+original row order, fixed on day one and never changed. The target is 71 percent positive
+and the metric is AUC, so stratification matters and nothing else about the data suggests
+groups or time ordering. The fold vector is rebuilt and checksummed in every notebook
+rather than loaded, because a silently different split produces a clean looking wrong
+answer.
+
+That scheme turned out to be the one the public libraries for this competition also
+converged on, which mattered later.
+
+**The CV to leaderboard offset was the instrument, not the CV number itself.** Across
+sixteen own-model submissions it held between +0.001256 and +0.001322, with the direction
+agreeing on eleven of thirteen consecutive pairs. A stable offset means CV can be trusted
+to rank changes without spending a submission. When the offset moved, that was information:
+it fell to +0.001093 as public members entered the stack, which is what members whose
+out-of-fold values are optimistic look like from the outside.
+
+### What moved the score
+
+Three things, in order of size.
+
+**Target encoding, +0.003312.** Smoothed target and frequency encoding of all twelve
+columns, fitted inside the fold loop with an inner five-fold split so no row sees its own
+label. This was the largest single gain in the competition and most of the feature work
+that followed it returned nothing.
+
+**A composition ratio block, +0.000356 to +0.000906.** Thirteen columns of shares, slacks
+and per-hour rates. It paid on every learner family tried and paid more with the encoder
+present than without, which contradicted this repo's own stated explanation of why target
+encoding worked and forced that explanation to be rewritten.
+
+**RealMLP, +0.000072 to the stack.** A neural architecture the stack did not contain,
+implemented from the paper. Nine membership gates ran in total and this was the only one
+after row 122 to clear five figures. Every gate that offered a better version of something
+already present returned noise.
+
+### The model
+
+A logistic regression on the clipped logits of member out-of-fold vectors, fitted inside
+the fold loop so the combiner is out-of-fold as well as the members. Members are pruned to
+the top 65 by mean absolute coefficient. Four constrained alternatives were tested against
+it, including hill climbing and non-negative least squares, and all transferred slightly
+worse on the leaderboard despite using no negative weights.
+
+### The decision that changed the competition
+
+The repo ran own models only until row 144, reached 0.968944 out of fold and 0.97021
+public, and closed modelling on eleven gates. Reading the public frontier then showed that
+the scores above this repo were level two models over pooled out-of-fold libraries rather
+than a representation anyone had found.
+
+That decision was reversed deliberately and the reversal is recorded in the ledger. What
+makes rows 145 onward defensible is [`writeup/verify_public_oof.py`](writeup/verify_public_oof.py).
+
+**The problem it solves.** An out-of-fold vector built on a different fold partition is
+still out-of-fold per row, so it scores normally and looks clean. But the model behind its
+value on our training rows trained on rows sitting inside our validation fold. Using it as
+a combiner feature leaks validation information into the fit, raises CV, and does not raise
+the leaderboard.
+
+**The test.** Authors print their own per-fold AUCs. Recompute per-fold AUC on the same
+vector using our fold assignment and admit the member only if the two agree in order,
+because a fold AUC is a property of exactly which rows sit in the fold. Ten members passed.
+Two were rejected, including the highest AUC candidate seen in the competition at 0.968691,
+whose fold AUCs read 0.96810 on our partition where its author had printed 0.96593. A
+vector scoring higher on our folds than on its own is the signature of a different split.
+
+That rejection was independently confirmed: one library author had retrained the same
+architecture himself because the published version used ten folds and could not be stacked
+against a five-fold library without leaking.
+
+Two indirect tests were built to admit members without printed fold numbers, and both
+failed. One of them is a published method, and calibrating it against two known foreign
+vectors showed it to be anti-predictive rather than merely weak.
+
+### What the final submissions are
+
+Two submissions were selected, deliberately different in kind.
+
+`family_mean_v3.csv` is an equal-weight rank average of four public plateau blends, with
+near-duplicates collapsed so no author votes twice. Nothing is fitted in it, on out-of-fold
+data or on the leaderboard. **It contains no model built in this repo.** It is the higher
+public score and the smaller part of the work, and the ledger says so in the row that
+records it.
+
+`stack_greedy_extblend.csv` is this repo's own stack: 175 members, our combiner, our folds,
+plus one external blend whose out-of-fold vector could be verified. Out of fold 0.970127
+with a realised offset of +0.001013, in line with every honest submission before it.
+
+The pair is a hedge. The plateau is the most crowded position on the board, with 76 teams
+holding the same score and predictions correlated above 0.9999. If it reshuffles on the
+private split, the second submission is the one built on verified folds and uncorrelated
+with that block.
+
+### The finding worth taking to the next competition
+
+A family mean of four public blends scores exactly what submitting one of them unchanged
+scores. Ten constructions were tested against the plateau, including median, geometric
+mean, quality weighting, trimming and three blends with our own work, and every one
+returned the identical number. At the top of this board the public split cannot resolve
+0.00001 against its own standard error of 0.00061, and 115 teams sit inside three
+ten-thousandths of each other.
 
 The reasoning as it happened, including the ideas that were rejected and why, is in
 [`NOTES.md`](NOTES.md). That file is the honest version and it is written before the
