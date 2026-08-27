@@ -218,6 +218,7 @@ Every run, including the ones that failed, is in [`experiments.csv`](experiments
 | 167 | family_geomean_and_discussion_sweep |  |  | 0.97128 |
 | 168 | greedy_blend_extblend19 | 0.970127 |  | 0.97114 |
 | 169 | plateau_plus_extblend_w15 |  |  | 0.97127 |
+| 170 | plateau_lottery_four_variants |  |  | 0.97128 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
