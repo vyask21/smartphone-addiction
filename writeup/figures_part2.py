@@ -157,7 +157,7 @@ FOREIGN = [
 
 if ver and all(p.exists() for _, p in FOREIGN):
     pool = [prof(v) for _, v in ver]
-    for f in sorted(glob.glob(str(ROOT / "artifacts" / "srcL" / "oof_*.npy")))[:20]:
+    for f in sorted(glob.glob(str(ROOT / "artifacts" / "wide_library" / "oof_*.npy")))[:20]:
         pool.append(prof(np.load(f)))
     med = np.median(np.array(pool), axis=0)
     cong = lambda v: float(np.corrcoef(prof(v), med)[0, 1])

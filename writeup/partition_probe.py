@@ -103,7 +103,7 @@ else:
 
 if thr is not None:
     print("\nCANDIDATE LIBRARIES")
-    for folder, glob in (("srcJ", "oof_*.npy"), ("srcK", "oof_*.npy")):
+    for folder, glob in (("catboost_library", "oof_*.npy"), ("srcK", "oof_*.npy")):
         d = ROOT / "artifacts" / folder
         rows = []
         for p in sorted(d.glob(glob)):

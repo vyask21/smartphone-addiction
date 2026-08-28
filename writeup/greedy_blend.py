@@ -88,7 +88,7 @@ for nm, o, t in [
 
 # srcB's five base members. Row 155 offered them as stack MEMBERS and they returned
 # -0.000000, so they are not in the stack and are available as blend partners.
-NJ = ROOT / "artifacts" / "srcB_oof"
+NJ = ROOT / "artifacts" / "blend_library"
 for _k in ("01", "02", "03", "04", "05"):
     _op, _tp = NJ / f"{_k}_oof_predictions.csv", NJ / f"{_k}_submission.csv"
     if _op.exists() and _tp.exists():
@@ -123,7 +123,7 @@ if (WK / "oof.npy").exists():
 # CAVEAT carried into the ledger: a blend's OOF is optimistic if its own weights were
 # fitted in-sample on that same OOF, which is what row 24 of this ledger measured about
 # our own first stacker. The realised offset on submission is the check.
-NJB = ROOT / "artifacts" / "srcB_oof"
+NJB = ROOT / "artifacts" / "blend_library"
 for _op in sorted(NJB.glob("*_blend_oof_predictions.csv")):
     # 19_blend ships as "19_blend_submission.csv.csv", a doubled extension in the
     # published dataset. The first run of this file silently skipped it, which dropped
@@ -143,7 +143,7 @@ for _op in sorted(NJB.glob("*_blend_oof_predictions.csv")):
     _tc = [c for c in _dt.columns if c.lower() != "id"][0]
     CAND[f"njb_{_op.name[:2]}"] = (_do[_oc].to_numpy(float), _dt[_tc].to_numpy(float))
 
-BE = ROOT / "artifacts" / "beicicc"
+BE = ROOT / "artifacts" / "foldid_source"
 if (BE / "fold_id.npy").exists():
     _fid = np.load(BE / "fold_id.npy")
     _labs = sorted(set(_fid.tolist()))
@@ -158,7 +158,7 @@ if (BE / "fold_id.npy").exists():
 # paiky1995. Several members are named *_10f, so the library mixes fold counts and is
 # unusable as stack MEMBERS, exactly like boltuzamaki. As blend PARTNERS the weight is
 # the only fitted quantity and the 5-of-5-fold guard decides.
-PK = ROOT / "artifacts" / "paiky"
+PK = ROOT / "artifacts" / "lookup_library"
 for _op in sorted(PK.glob("oof_*.npy")):
     _tp = PK / _op.name.replace("oof_", "testpred_", 1)
     if not _tp.exists():
