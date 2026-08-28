@@ -27,7 +27,7 @@ answer.
 That scheme turned out to be the one the public libraries for this competition also
 converged on, which mattered later.
 
-**The CV to leaderboard offset was the instrument, not the CV number itself.** Across
+The offset between CV and the leaderboard was the instrument, not the CV number itself. Across
 sixteen own-model submissions it held between +0.001256 and +0.001322, with the direction
 agreeing on eleven of thirteen consecutive pairs. A stable offset means CV can be trusted
 to rank changes without spending a submission. When the offset moved, that was information:
@@ -38,17 +38,17 @@ out-of-fold values are optimistic look like from the outside.
 
 Three things, in order of size.
 
-**Target encoding, +0.003312.** Smoothed target and frequency encoding of all twelve
+Target encoding, +0.003312. Smoothed target and frequency encoding of all twelve
 columns, fitted inside the fold loop with an inner five-fold split so no row sees its own
 label. This was the largest single gain in the competition and most of the feature work
 that followed it returned nothing.
 
-**A composition ratio block, +0.000356 to +0.000906.** Thirteen columns of shares, slacks
+A composition ratio block, +0.000356 to +0.000906. Thirteen columns of shares, slacks
 and per-hour rates. It paid on every learner family tried and paid more with the encoder
 present than without, which contradicted this repo's own stated explanation of why target
 encoding worked and forced that explanation to be rewritten.
 
-**RealMLP, +0.000072 to the stack.** A neural architecture the stack did not contain,
+RealMLP, +0.000072 to the stack. A neural architecture the stack did not contain,
 implemented from the paper. Nine membership gates ran in total and this was the only one
 after row 122 to clear five figures. Every gate that offered a better version of something
 already present returned noise.
@@ -71,13 +71,13 @@ than a representation anyone had found.
 That decision was reversed deliberately and the reversal is recorded in the ledger. What
 makes rows 145 onward defensible is [`writeup/verify_public_oof.py`](writeup/verify_public_oof.py).
 
-**The problem it solves.** An out-of-fold vector built on a different fold partition is
+The problem it solves. An out-of-fold vector built on a different fold partition is
 still out-of-fold per row, so it scores normally and looks clean. But the model behind its
 value on our training rows trained on rows sitting inside our validation fold. Using it as
 a combiner feature leaks validation information into the fit, raises CV, and does not raise
 the leaderboard.
 
-**The test.** Authors print their own per-fold AUCs. Recompute per-fold AUC on the same
+The test. Authors print their own per-fold AUCs. Recompute per-fold AUC on the same
 vector using our fold assignment and admit the member only if the two agree in order,
 because a fold AUC is a property of exactly which rows sit in the fold. Ten members passed.
 Two were rejected, including the highest AUC candidate seen in the competition at 0.968691,
@@ -98,7 +98,7 @@ Two submissions were selected, deliberately different in kind.
 
 `family_mean_v3.csv` is an equal-weight rank average of four public plateau blends, with
 near-duplicates collapsed so no author votes twice. Nothing is fitted in it, on out-of-fold
-data or on the leaderboard. **It contains no model built in this repo.** It is the higher
+data or on the leaderboard. It contains no model built in this repo. It is the higher
 public score and the smaller part of the work, and the ledger says so in the row that
 records it.
 
@@ -117,8 +117,8 @@ A family mean of four public blends scores exactly what submitting one of them u
 scores. Ten constructions were tested against the plateau, including median, geometric
 mean, quality weighting, trimming and three blends with our own work, and every one
 returned the identical number. At the top of this board the public split cannot resolve
-0.00001 against its own standard error of 0.00061, and 115 teams sit inside three
-ten-thousandths of each other.
+0.00001 against its own standard error of 0.00061, and 109 teams sit inside two
+hundred-thousandths of each other.
 
 The reasoning as it happened, including the ideas that were rejected and why, is in
 [`NOTES.md`](NOTES.md). That file is the honest version and it is written before the
@@ -148,179 +148,11 @@ Accepting the competition rules on the website is required first. The download r
 
 ## Experiment log
 
-Every run, including the ones that failed, is in [`experiments.csv`](experiments.csv).
+Every run, including the ones that failed, is a row in
+[`experiments.csv`](experiments.csv): 169 of them, with CV, fold standard deviation,
+public leaderboard score where one came back, and the single variable each run
+changed. What follows is how to read it.
 
-| id | name | CV AUC | fold sd | public LB |
-|---|---|---|---|---|
-| 1 | lgbm_default_anchor | 0.954947 | 0.000645 | 0.955940 |
-| 2 | lgbm_trees100 | 0.954947 | 0.000645 | reproducibility re-run of 1 |
-| 3 | lgbm_trees300 | 0.960605 | 0.000688 | |
-| 4 | lgbm_trees1000 | 0.962141 | 0.000859 | 0.964350 |
-| 5 | lgbm_trees2000 | 0.961832 | 0.000952 | |
-| 6 | lgbm_lr01 | 0.962198 | 0.000816 | |
-| 7 | lgbm_lr005 | 0.963210 | 0.000591 | |
-| 8 | lgbm_lr003 | 0.963275 | 0.000549 | 0.964780 |
-| 9 | lgbm_bag08_seed42 | 0.963471 | 0.000591 | |
-| 10 | lgbm_bag08_seed2024 | 0.963234 | 0.000899 | |
-| 11 | lgbm_bag08_seed7 | 0.963445 | 0.000478 | |
-| 12 | lgbm_bag08_seedblend3 | 0.963821 | 0.000560 | 0.965090 |
-| 13 | lgbm_bag08_seed2025 | 0.963337 | 0.000731 | |
-| 14 | lgbm_bag08_seed13 | 0.963483 | 0.000552 | |
-| 15 | lgbm_bag08_seedblend5 | 0.963880 | 0.000555 | 0.965080 |
-| 16 | neural_mlp_kaggle | 0.939169 | 0.000759 | not submitted |
-| 17 | lgbm_bag08_seed42_te | 0.966782 | 0.000453 | 0.96825 |
-| 18 | lgbm_bag08_seed42_te_imp | 0.966805 | 0.000469 | null result, not submitted |
-| 19 | lgbm_bag08_seed42_te_lat | 0.966651 | 0.000515 | negative, not submitted |
-| 20 | lgbm_bag08_seed2024_te | 0.966771 | 0.000446 | |
-| 21 | lgbm_bag08_seed7_te | 0.966729 | 0.000433 | |
-| 22 | lgbm_bag08_seed2025_te | 0.966743 | 0.000427 | |
-| 23 | lgbm_bag08_seed13_te | 0.966789 | 0.000427 | |
-| 24 | stack_logit_18 | 0.967665 | 0.000432 | 0.96897 |
-| 25 | stack_logit_18_oof | 0.967650 | 0.000437 | not submitted |
-| 26 | catboost_te | 0.966915 | 0.000435 | |
-| 27 | stack_logit_19_oof | 0.967750 | 0.000431 | not submitted |
-| 28 | catboost_te_seed2024 | 0.966928 | 0.000468 | |
-| 29 | catboost_te_seed7 | 0.966920 | 0.000424 | |
-| 30 | catboost_te_seed2025 | 0.966916 | 0.000431 | |
-| 31 | catboost_te_seed13 | 0.966922 | 0.000442 | |
-| 32 | stack_logit_23_oof | 0.967764 | 0.000434 | 0.96902 |
-| 33 | neural_te | 0.965373 | 0.000405 | in the stack, not submitted alone |
-| 34 | stack_logit_24_oof | 0.967807 | 0.000432 | not submitted |
-| 35 | te_leaves15 | 0.966016 | 0.000799 | |
-| 36 | te_leaves63 | 0.966758 | 0.000440 | |
-| 37 | te_leaves127 | 0.966596 | 0.000454 | |
-| 38 | xgb_te | 0.967099 | 0.000414 | |
-| 39 | stack_logit_25_oof | 0.967873 | 0.000424 | not submitted |
-| 40 | xgb_te_seed2024 | 0.967148 | 0.000432 | |
-| 41 | xgb_te_seed7 | 0.967132 | 0.000455 | |
-| 42 | xgb_te_seed2025 | 0.967099 | 0.000421 | |
-| 43 | xgb_te_seed13 | 0.967111 | 0.000446 | |
-| 44 | stack_logit_29_oof | 0.967925 | 0.000428 | 0.96924 |
-| 45 | stack_logit_24_pruned | 0.967929 | 0.000429 | discarded, not submitted |
-| 46 | xgb_smooth1 | 0.967122 | 0.000440 | |
-| 47 | xgb_smooth5 | 0.967116 | 0.000443 | |
-| 48 | xgb_smooth25 | 0.967037 | 0.000418 | |
-| 49 | xgb_smooth100 | 0.966880 | 0.000426 | |
-| 50 | xgb_inner2 | 0.966937 | 0.000435 | |
-| 51 | xgb_inner3 | 0.967016 | 0.000428 | |
-| 52 | xgb_inner5 | 0.967099 | 0.000414 | |
-| 53 | xgb_inner10 | 0.967107 | 0.000427 | |
-| 54 | xgb_inner20 | 0.967096 | 0.000444 | |
-| 55 | xgb_pair_base | 0.967099 | 0.000414 | |
-| 56 | xgb_pair_top9 | 0.967176 | 0.000475 | |
-| 57 | xgb_pair_all66 | 0.966589 | 0.000446 | |
-| 58 | stack_29_refit | 0.967925 | 0.000428 | |
-| 59 | stack_30_top9 | 0.967968 | 0.000436 | 0.96929 |
-| 60 | stack_30_all66 | 0.967934 | 0.000427 | |
-| 61 | stack_31_both | 0.967967 | 0.000436 | |
-| 62 | xgb_depth4 | 0.966825 | 0.000481 | |
-| 63 | xgb_depth6 | 0.967099 | 0.000414 | |
-| 64 | xgb_depth8 | 0.966589 | 0.000400 | |
-| 65 | xgb_depth10 | 0.966301 | 0.000465 | |
-| 66 | cat_native_c1 | 0.958943 | 0.000504 | |
-| 67 | cat_native_c2 | 0.961358 | 0.000536 | |
-| 68 | lgb_raw | 0.963464 | 0.000586 | |
-| 69 | xgb_raw | 0.964218 | 0.000497 | |
-| 70 | cat_raw | 0.961420 | 0.000482 | |
-| 71 | stack_30_row59_refit | 0.967968 | 0.000436 | |
-| 72 | stack_31_cat_nat_c1 | 0.967987 | 0.000425 | |
-| 73 | stack_31_cat_nat_c2 | 0.967970 | 0.000439 | |
-| 74 | stack_31_lgb_raw | 0.967967 | 0.000436 | |
-| 75 | stack_31_xgb_raw | 0.967990 | 0.000430 | |
-| 76 | stack_31_cat_raw | 0.967975 | 0.000441 | |
-| 77 | stack_35_all5 | 0.968110 | 0.000432 | 0.96941 |
-| 78 | cat_raw_n2000 | 0.961420 | 0.000482 | |
-| 79 | cat_raw_n3000 | 0.962736 | 0.000494 | |
-| 80 | cat_raw_n4000 | 0.963343 | 0.000479 | |
-| 81 | cat_raw_n6000 | 0.963854 | 0.000500 | |
-| 82 | cat_raw_n8000 | 0.964003 | 0.000481 | |
-| 83 | cat_raw_n10000 | 0.964042 | 0.000476 | |
-| 84 | cat_raw_n12000 | 0.964020 | 0.000476 | |
-| 85 | cat_te_n2000 | 0.966915 | 0.000435 | |
-| 86 | cat_te_n3000 | 0.967101 | 0.000441 | |
-| 87 | cat_te_n4000 | 0.967166 | 0.000445 | |
-| 88 | cat_te_n6000 | 0.967158 | 0.000454 | |
-| 89 | cat_te_n8000 | 0.967069 | 0.000463 | |
-| 90 | lgb_raw_fe | 0.963821 | 0.000596 | |
-| 91 | xgb_raw_fe | 0.964666 | 0.000486 | |
-| 92 | cat_raw_fe | 0.962181 | 0.000546 | |
-| 93 | xgb_te_fe | 0.968005 | 0.000418 | |
-| 94 | stack_41_all6 | 0.968713 | 0.000407 | 0.97003 |
-| 95 | stack_36_xgb_te_fe | 0.968534 | 0.000420 | |
-| 96 | stack_36_xgb_raw_fe | 0.968562 | 0.000400 | |
-| 97 | stack_36_cat_raw_fe | 0.968484 | 0.000428 | |
-| 98 | stack_36_lgb_raw_fe | 0.968376 | 0.000419 | |
-| 99 | stack_36_cat_te_n4000 | 0.968122 | 0.000435 | |
-| 100 | stack_36_cat_raw_n10k | 0.968130 | 0.000432 | |
-| 101 | xgb_bin256 | 0.968005 | 0.000418 | |
-| 102 | xgb_bin512 | 0.968033 | 0.000422 | |
-| 103 | xgb_bin1024 | 0.968040 | 0.000419 | |
-| 104 | xgb_bin1536 | 0.968054 | 0.000409 | |
-| 105 | xgb_bin3072 | 0.968014 | 0.000397 | |
-| 106 | neural_fixed | 0.965402 | 0.000387 | |
-| 107 | neural_lookup | 0.961181 | 0.000319 | |
-| 108 | lgb_te_fe | 0.967212 | 0.001382 | |
-| 109 | cat_te_fe | 0.968036 | 0.000432 | |
-| 110 | logit_te_fe | 0.954249 | 0.000541 | |
-| 111 | hgb_te_fe | 0.967885 | 0.000426 | |
-| 112 | et_te_fe | 0.959538 | 0.000619 | |
-| 113 | rf_te_fe | 0.962430 | 0.000590 | |
-| 114 | stack_40_row94_nodup | 0.968712 | 0.000407 | |
-| 115 | stack_41_cat_te_fe | 0.968741 | 0.000409 | |
-| 116 | stack_41_hgb_te_fe | 0.968728 | 0.000408 | |
-| 117 | stack_41_lgb_te_fe | 0.968706 | 0.000432 | |
-| 118 | stack_41_rf_te_fe | 0.968714 | 0.000407 | |
-| 119 | stack_41_neural_lookup | 0.968790 | 0.000409 | |
-| 120 | stack_41_et_te_fe | 0.968716 | 0.000408 | |
-| 121 | stack_41_logit_te_fe | 0.968714 | 0.000407 | |
-| 122 | stack_47_all7 | 0.968824 | 0.000418 | 0.97013 |
-| 123 | xgb_te_fe_refit | 0.968005 | 0.000418 | |
-| 124 | xgb_tuned | 0.968222 | 0.000420 | |
-| 125 | stack_47_row122_refit | 0.968824 | 0.000418 | |
-| 126 | stack_48_xgb_tuned | 0.968845 | 0.000415 | 0.97014 |
-| 127 | neural_fe | 0.965798 | 0.000345 | |
-| 128 | neural_wide | 0.965432 | 0.000375 | |
-| 129 | neural_res | 0.964007 | 0.000334 | |
-| 130 | stack_48_row126_refit | 0.968845 | 0.000415 | |
-| 131 | stack_49_neural_fe | 0.968845 | 0.000414 | |
-| 132 | stack_49_neural_wide | 0.968844 | 0.000416 | |
-| 133 | stack_49_neural_res | 0.968849 | 0.000412 | |
-| 134 | stack_51_all3 | 0.968850 | 0.000410 | |
-| 135 | realmlp | 0.967728 | 0.000416 | |
-| 136 | stack_52_realmlp | 0.968922 | 0.000411 | |
-| 137 | stack_prune25 | 0.968932 | 0.000402 | 0.97020 |
-| 138 | realmlp10 | 0.967892 | 0.000411 | |
-| 139 | stack_53_realmlp10 | 0.968932 | 0.000408 | |
-| 140 | stack_prune25_v2 | 0.968944 | 0.000401 | 0.97021 |
-| 141 | realmlp_raw_fe | 0.952357 | 0.000663 | |
-| 142 | stack_54_realmlp_raw_fe | 0.968933 | 0.000406 | |
-| 143 | tabm | 0.966931 | 0.000455 | |
-| 144 | stack_55_tabm | 0.968941 | 0.000408 | |
-| 145 | stack_prune35_public | 0.969281 | 0.000412 | 0.97054 |
-| 146 | stack_prune35_public2 | 0.969406 | 0.000412 | 0.97063 |
-| 147 | stack_prune65_library | 0.969737 | 0.000387 | 0.97083 |
-| 148 | stack_prune65_library2 | 0.969776 | 0.000390 | |
-| 149 | stack_prune85_extlib7 | 0.969778 | 0.000387 | |
-| 150 | combiner_hillclimb | 0.969474 | 0.000400 | 0.97055 |
-| 151 | stack_prune65_extlib22 | 0.969891 | 0.000396 | 0.97103 |
-| 153 | stack_prune65_last | 0.969962 | 0.000379 | 0.97103 |
-| 154 | prune_sweep_and_bolt_reject | 0.969965 | 0.000379 | |
-| 155 | stack_180_extbase5 | 0.969930 | 0.000383 | |
-| 156 | combiner_protocol_fulltest | 0.969962 | 0.000379 | 0.97103 |
-| 157 | blend_lookup_w15 | 0.969989 |  | 0.97103 |
-| 158 | greedy_blend_rejected | 0.970068 |  | 0.97106 |
-| 159 | greedy_blend_pool105 | 0.970084 |  | 0.97107 |
-| 160 | greedy_blend_pool294 | 0.970076 |  | |
-| 161 | joint_blend_weights | 0.970086 |  | |
-| 162 | family_mean_public_fusion |  |  | 0.97127 |
-| 163 | family_mean_v2_alldraws |  |  | 0.97123 |
-| 164 | family_mean_v3_plateau_gated |  |  | 0.97128 |
-| 165 | family_median_and_source_sweep |  |  | 0.97128 |
-| 166 | plateau_plus_ours_w10 |  |  | 0.97127 |
-| 167 | family_geomean_and_discussion_sweep |  |  | 0.97128 |
-| 168 | greedy_blend_extblend19 | 0.970127 |  | 0.97114 |
-| 169 | plateau_plus_extblend_w15 |  |  | 0.97127 |
-| 170 | plateau_lottery_four_variants |  |  | 0.97128 |
 
 Rows 6 onward have LightGBM's determinism flags on and are verified bit-identical on
 re-run. Rows 1 to 5 predate that and carry about 1e-4 of run-to-run noise, so do not
@@ -388,6 +220,3 @@ rather than a lookup over levels.
 The fold standard deviation is the number that matters when reading this table. A
 change smaller than it is noise until it survives a seed sweep.
 
-This table is generated from `experiments.csv` by `writeup/readme_table.py`. It is not
-maintained by hand, because between 2026-08-11 and 2026-08-20 the hand-maintained
-version fell 24 rows behind the file it was copying.
