@@ -58,3 +58,9 @@ kaggle/*/46_xgb_optuna.ipynb
 kaggle/*/49_neural_variety.ipynb
 kaggle/*/51_realmlp.ipynb
 kaggle/*/53_realmlp_ens10.ipynb
+
+# Assistant instruction file. Kept on disk, not published: it is configuration for a
+# tool rather than something a reader of this repo came for. The rules the notebooks
+# actually cite were moved into the "rules this was run under" section of NOTES.md on
+# 2026-08-29, so every citation still resolves to a document in this repository.
+CLAUDE.md

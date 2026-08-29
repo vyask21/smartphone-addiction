@@ -127,7 +127,7 @@ outcome is known.
 ## Layout
 
 This competition is notebook-first. There is no `src/` and no `conf/`, which is a
-deliberate departure from the workspace template, argued out in [`CLAUDE.md`](CLAUDE.md).
+deliberate departure from the workspace template, argued out in [`NOTES.md`](NOTES.md).
 Every number in the ledger comes from a Save & Run All on a clean kernel.
 
 ## Reproducing
