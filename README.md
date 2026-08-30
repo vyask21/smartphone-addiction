@@ -70,14 +70,14 @@ teams sit inside two hundred-thousandths of each other with predictions correlat
 That is why the two selected submissions are deliberately different in kind rather than two
 versions of one bet.
 
-`family_mean_v3.csv` is an equal-weight rank average of four public blends, with
-near-duplicates collapsed so no author votes twice. Nothing in it is fitted, on out-of-fold
-data or on the leaderboard. It contains no model built in this repo, and the ledger row
-that records it says so in its first sentence.
+The first is an equal-weight rank average of four public blends, with near-duplicates
+collapsed so no author votes twice. Nothing in it is fitted, on out-of-fold data or on the
+leaderboard. It contains no model built in this repo, and the ledger row that records it
+says so in its first sentence.
 
-`stack_greedy_extblend.csv` is this repo's own stack: 175 members, own combiner, own folds,
-plus one external blend whose out-of-fold vector could be verified. 0.970127 out of fold at
-a realised offset of +0.001013, in line with every honest submission before it.
+The second is this repo's own stack: 175 members, own combiner, own folds, plus one
+external blend whose out-of-fold vector could be verified. 0.970127 out of fold at a
+realised offset of +0.001013, in line with every honest submission before it.
 
 If that plateau reshuffles on the private split, the second one is the reason there is
 still a result.
