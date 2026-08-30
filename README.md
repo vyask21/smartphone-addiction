@@ -43,27 +43,32 @@ pruned to the top 65 members by mean absolute coefficient.
 
 Public out-of-fold libraries are permitted here. This repo declined to use them until row
 144, then reversed that deliberately, and the reversal is recorded in the ledger rather
-than quietly made.
+than quietly made. What makes rows 145 onward defensible is
+[`writeup/verify_public_oof.py`](writeup/verify_public_oof.py).
 
-What makes rows 145 onward defensible is
-[`writeup/verify_public_oof.py`](writeup/verify_public_oof.py). A vector built on a
-different fold partition is still out-of-fold per row, so it scores normally and looks
-clean. But the model behind its value on your training rows trained on rows sitting inside
-your validation fold. Use it as a combiner feature and your CV rises while the leaderboard
-does not.
+A vector built on a different fold partition is still out-of-fold per row, so it scores
+normally and looks clean, but the model behind its value on your training rows trained on
+rows sitting inside your validation fold. Use it as a combiner feature and your CV rises
+while the leaderboard does not. The test is to recompute per-fold AUC on your own fold
+assignment and admit the member only if it reproduces the author's printed per-fold scores
+in order, because a fold AUC is a property of exactly which rows sit in the fold.
 
-The test is to recompute per-fold AUC using your own fold assignment, and admit the member
-only if it reproduces the author's own printed per-fold scores in order, because a fold AUC
-is a property of exactly which rows sit in the fold. Ten members passed. Two were rejected,
-including the highest scoring candidate seen in the competition at 0.968691, whose fold
-AUCs read 0.96810 on this partition where its author had printed 0.96593. A vector that
-scores higher on your folds than on its own is a mixture rather than a held-out prediction.
-Two days later a library author turned out to have retrained that same architecture
-himself, for the identical reason, written plainly in his README.
+Ten members passed. Two were rejected, including the highest scoring candidate in the
+competition at 0.968691, whose fold AUCs read 0.96810 on this partition where its author
+had printed 0.96593. A vector scoring higher on your folds than on its own is a mixture
+rather than a held-out prediction.
 
-## What was submitted
+## What was submitted, and the finding behind it
 
-Two files, deliberately different in kind.
+A family mean of four public blends scores exactly what submitting one of them unchanged
+scores. Ten constructions were tested against the plateau, including median, geometric
+mean, quality weighting and trimming, and every one returned the identical number. The
+public split cannot resolve 0.00001 against its own standard error of 0.00061, and 109
+teams sit inside two hundred-thousandths of each other with predictions correlated above
+0.9999.
+
+That is why the two selected submissions are deliberately different in kind rather than two
+versions of one bet.
 
 `family_mean_v3.csv` is an equal-weight rank average of four public blends, with
 near-duplicates collapsed so no author votes twice. Nothing in it is fitted, on out-of-fold
@@ -74,18 +79,8 @@ that records it says so in its first sentence.
 plus one external blend whose out-of-fold vector could be verified. 0.970127 out of fold at
 a realised offset of +0.001013, in line with every honest submission before it.
 
-The pair is a hedge. The plateau is the most crowded position on the board, 76 teams
-holding one score with predictions correlated above 0.9999. If it reshuffles on the private
-split, the second submission is the one built on verified folds and uncorrelated with that
-block.
-
-## The finding worth keeping
-
-A family mean of four public blends scores exactly what submitting one of them unchanged
-scores. Ten constructions were tested against the plateau, including median, geometric
-mean, quality weighting and trimming, and every one returned the identical number. At the
-top of this board the public split cannot resolve 0.00001 against its own standard error of
-0.00061, and 109 teams sit inside two hundred-thousandths of each other.
+If that plateau reshuffles on the private split, the second one is the reason there is
+still a result.
 
 ## What is in this repo
 
