@@ -7,11 +7,20 @@ missing values.
 - Competition: https://www.kaggle.com/competitions/playground-series-s6e8
 - Metric: area under the ROC curve
 - Deadline: 2026-08-31
-- Final placement:
+- Final placement: 78 of 3,532, private AUC 0.97103
 
 ## Result
 
-One paragraph, written at the end: what was built, what it scored, where it placed.
+Private leaderboard 0.97103, rank 78 of 3,532, which is the top 2.2 percent. Nothing here
+was a shakeup. The two splits ranked this repo's own 38 submissions in almost exactly the
+same order, Spearman 0.9895, and across all 3,532 teams the rank correlation was 0.9962.
+The public rank was 174, and the ninety-six places gained came from other teams selecting
+something other than their best public score rather than from anything of ours improving.
+
+The best private score reachable from any submission in this repo was 0.97103, and 0.97103
+is what counted, so the selection was optimal. That deserves no credit: seven different
+submissions reach it and any pick touching the plateau family would have found it. The
+argument that took real work is the one below, and it lost.
 
 ## Approach
 
@@ -79,14 +88,23 @@ The second is this repo's own stack: 175 members, own combiner, own folds, plus 
 external blend whose out-of-fold vector could be verified. 0.970127 out of fold at a
 realised offset of +0.001013, in line with every honest submission before it.
 
-If that plateau reshuffles on the private split, the second one is the reason there is
-still a result.
+The plateau did not reshuffle. The second submission scored 0.97088, fifteen
+ten-thousandths behind the first and the largest public-to-private drop of anything in the
+repo, in the same order the public split had already put the two. The case for it was that
+crowded public solutions move together into a private split and an independent one does
+not, which is a real effect on some boards and was not one on this board. The reasoning is
+in the ledger at rows 166 to 169 and so is the number that refuted it.
+
+One thing the private split did resolve. Four variants of the plateau tied exactly at
+0.97128 on the public split; on the private split, which is four times larger, three
+scored 0.97103 and one scored 0.97102. That single separated variant is the only direct
+measurement here of what the public standard error of 0.00061 was concealing.
 
 ## What is in this repo
 
-- [`experiments.csv`](experiments.csv), 169 rows. Every run including the failures, with
-  CV, fold standard deviation, public score where one came back, and the single variable
-  each run changed. This is the deliverable; the models are disposable.
+- [`experiments.csv`](experiments.csv), 170 rows. Every run including the failures, with
+  CV, fold standard deviation, both leaderboard scores where they came back, and the single
+  variable each run changed. This is the deliverable; the models are disposable.
 - [`NOTES.md`](NOTES.md), the running argument behind those numbers. Why each thing was
   tried and what it meant, written before the outcome was known, dead ends included. It
   also carries the rules this was run under and a section on how to read the ledger.
