@@ -1,6 +1,6 @@
 """Compute every number the public writeup will plot, from the saved artifacts.
 
-Nothing here is read off NOTES.md. The point is that the writeup's figures are
+Nothing here is read off this repo. The point is that the writeup's figures are
 reproduced from the out-of-fold vectors on disk, so a number in the notebook and a
 number in the ledger cannot drift apart.
 

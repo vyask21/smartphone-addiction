@@ -4,7 +4,7 @@ Companion to `writeup_numbers.py`, which stops at the 29-member stack and predat
 RealMLP, TabM, the encoder-off view and the rank analysis.
 
 Same rule as that file and it is the point of both: **nothing here is read off
-NOTES.md**. Member scores and correlations are recomputed from the out-of-fold
+this repo**. Member scores and correlations are recomputed from the out-of-fold
 vectors on disk. Gate gains come from `experiments.csv`, which is exact rather than
 approximate: every stack arm in a gate is scored on the same five folds, so the
 difference of the two `cv_mean` values IS the paired mean, not a proxy for it.

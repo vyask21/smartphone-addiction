@@ -1,5 +1,5 @@
 # pyyaml dropped from the template list: it was there to read conf/*.yaml and this
-# repo has no conf/. Versions are deliberately unpinned, see NOTES.md on the drift
+# repo has no conf/. Versions are deliberately unpinned, see this repo on the drift
 # between this environment and Kaggle's image.
 pandas
 numpy
