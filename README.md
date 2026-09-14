@@ -11,15 +11,12 @@ missing values.
 
 ## Result
 
-Private leaderboard 0.97103, rank 78 of 3,532, which is the top 2.2 percent. Nothing here
-was a shakeup. The two splits ranked this repo's own 38 submissions in almost exactly the
-same order, Spearman 0.9895, and across all 3,532 teams the rank correlation was 0.9962.
-The public rank was 174, and the ninety-six places gained came from other teams selecting
-something other than their best public score.
+Finished 78th of 3,532 teams at 0.97103 AUC, inside the top 2.2 percent.
 
-The best private score reachable from any submission in this repo was 0.97103, and 0.97103
-is what counted, so the selection was optimal. Seven different submissions reach that same
-number, so any pick touching the top group would have found it.
+The scored submission is a 65-member stack: gradient-boosted trees, two tabular neural
+networks, and published out-of-fold libraries, all trained on one fixed fold split and
+combined by a logistic regression fitted inside that same split. It was also the best
+submission this repo produced, so the result did not turn on which one was chosen.
 
 ## Approach
 
@@ -54,7 +51,7 @@ outside.
 
 Two things worked.
 
-**Target encoding, worth +0.0033 AUC and the largest single gain in the competition.**
+Target encoding was the largest single gain in the competition, worth +0.0033 AUC.
 Each of the twelve columns is replaced by the average target value across rows sharing
 that column value, smoothed toward the overall average so that rare values do not get
 extreme estimates. The hazard is leakage: if a row's own label feeds its own encoded
@@ -63,7 +60,7 @@ inside a second, inner five-fold split, so a row's encoded value always comes fr
 that excluded it. Each column also gets a frequency encoding, which is simply how often
 its value occurs.
 
-**A composition ratio block, worth +0.0004 to +0.0009.** Thirteen columns of shares and
+A composition ratio block was worth +0.0004 to +0.0009. Thirteen columns of shares and
 rates: what fraction of screen time is social media, how many hours remain after sleep and
 work, notifications per app open, and similar. These state relationships between columns
 that a tree would otherwise have to approximate with many separate splits.
@@ -76,15 +73,15 @@ rules, pairwise crossed encodings, and quantile bins of derived ratios.
 Four families, all trained on the same folds and the same feature frame so their
 predictions are directly comparable.
 
-- **Gradient-boosted decision trees**: LightGBM, XGBoost and CatBoost. Each builds
+- Gradient-boosted decision trees: LightGBM, XGBoost and CatBoost. Each builds
   hundreds of shallow trees in sequence, with every tree correcting the errors left by the
   ones before it. These are the strongest single models on tabular data of this shape.
-- **RealMLP**, a neural network designed for tabular data. Numeric columns pass through a
+- RealMLP, a neural network designed for tabular data. Numeric columns pass through a
   periodic embedding, which spreads one number across many sine and cosine features so the
   network can represent sharp changes that a plain layer would smooth over. Trained with a
   flat-then-cosine learning rate schedule, label smoothing, and an exponential moving
   average of the weights.
-- **TabM**, a parameter-efficient ensemble. One network carries several sets of lightweight
+- TabM, a parameter-efficient ensemble. One network carries several sets of lightweight
   per-branch weights, so a single training run yields several diverse predictions at close
   to the cost of one.
 
