@@ -2,7 +2,7 @@
 
 Column-level profile of the competition files, read in full.
 
-## `train.csv` (42.8 MB)
+## `train.csv` (44.9 MB)
 
 691,369 rows, 14 columns
 
@@ -23,7 +23,7 @@ Column-level profile of the competition files, read in full.
 | `academic_work_impact` | str | 6.4% | 2 | No |
 | `addicted_label` | int64 | 0.0% | 2 | 1 |
 
-## `test.csv` (17.8 MB)
+## `test.csv` (18.7 MB)
 
 296,302 rows, 13 columns
 
@@ -43,7 +43,7 @@ Column-level profile of the competition files, read in full.
 | `stress_level` | str | 6.6% | 3 | Medium |
 | `academic_work_impact` | str | 8.7% | 2 | Yes |
 
-## `sample_submission.csv` (7.3 MB)
+## `sample_submission.csv` (7.7 MB)
 
 296,302 rows, 2 columns
 
