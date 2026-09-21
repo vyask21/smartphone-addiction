@@ -1,0 +1,4 @@
+# Executed notebooks are exports, not hand-written source. Without this GitHub counts
+# their HTML and image output as the repo's language and the bar reads Jupyter Notebook
+# instead of Python.
+*.ipynb linguist-generated=true
