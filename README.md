@@ -133,12 +133,15 @@ of models rather than a held-out prediction.
 
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/kaggle competitions download playground-series-s6e8 -p data/raw
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+kaggle competitions download playground-series-s6e8 -p data/raw
+unzip data/raw/*.zip -d data/raw
 ```
 
-The Kaggle CLI does not extract the archive, so unzip `data/raw/*.zip` in place. Then run
-[`notebooks/01_baseline_lgbm.ipynb`](notebooks/01_baseline_lgbm.ipynb) top to bottom. It
+The Kaggle CLI does not extract the archive, which is why the unzip is a separate
+step. Then run [`notebooks/01_baseline_lgbm.ipynb`](notebooks/01_baseline_lgbm.ipynb)
+top to bottom. It
 finds the data by searching upward for `data/raw/`, so it also runs unchanged in a Kaggle
 notebook against `/kaggle/input/`.
 

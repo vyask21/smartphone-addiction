@@ -1,14 +1,17 @@
-# pyyaml dropped from the template list: it was there to read conf/*.yaml and this
-# repo has no conf/. Versions are deliberately unpinned, see this repo on the drift
-# between this environment and Kaggle's image.
+# Versions are deliberately unpinned. The Kaggle notebook image moves on its own schedule
+# and pinning here would only guarantee a mismatch with the environment the neural runs
+# were trained in. Pin these if you need a byte-identical rebuild.
 pandas
 numpy
+scipy
 scikit-learn
 lightgbm
-kaggle
+xgboost
+catboost
+torch
+optuna
 matplotlib
 seaborn
 jupyterlab
 ipywidgets
-xgboost
-optuna
+kaggle
